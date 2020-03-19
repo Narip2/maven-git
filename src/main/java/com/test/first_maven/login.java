@@ -155,6 +155,8 @@ public class login extends JFrame {
 									label_2.setText("账号已存在，请直接登录!");
 								}else {
 									stmt.executeUpdate("insert into user values(\'"+username+"\',\'"+passwd+"\')");
+									SSH ssh = new SSH();
+									ssh.exec("mkdir "+username);
 									label_2.setText("账号创建成功，请登录!");
 								}
 							}
