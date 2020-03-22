@@ -73,9 +73,9 @@ public class login extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private JPasswordField passwordField;
-	public String username;
+	public static String username;
 	public String passwd;
-	static login all_frame;
+	static login login_frame;
 	/**
 	 * Launch the application.
 	 */
@@ -97,7 +97,7 @@ public class login extends JFrame {
 			public void run() {
 				try {
 					login frame = new login();
-					all_frame = frame;
+					login_frame = frame;
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -165,8 +165,6 @@ public class login extends JFrame {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}  
-						           //连接URL为   jdbc:mysql//服务器地址/数据库名  ，后面的2个参数分别是登陆用户名和密码
-						
 					}
 				});
 				btnNewButton.setBounds(70, 125, 93, 23);
@@ -195,11 +193,14 @@ public class login extends JFrame {
 				      }else {
 				    	  if(rs.getString(2).equals(passwd))
 				    	  {
+				    		  //界面跳转
 				    		  after_login window = new after_login();
-				    		  all_frame.dispose();
+				    		  after_login.afterlogin_frame = window;
+				    		  login_frame.dispose();
 //				    		  contentPane.setVisible(false);
-//				    		  System.exit(0);
 				    		  window.setVisible(true);
+//				    		  System.exit(0);
+				    		  
 				    	  }else {
 				    		  label_2.setText("密码错误!");
 				    	  }

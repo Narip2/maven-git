@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JTable;
@@ -20,6 +21,13 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Vector;
+
 import javax.swing.JMenuItem;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JLabel;
@@ -29,13 +37,16 @@ import javax.swing.JTabbedPane;
 import javax.swing.JSplitPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JList;
 
 public class after_login extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
+	static after_login afterlogin_frame;
 	private JTable table;
-
+	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -56,6 +67,29 @@ public class after_login extends JFrame {
 	 * Create the frame.
 	 */
 	public after_login() {
+		Connection connect;
+		
+		Vector column_name = new Vector();
+		Vector row = new Vector();
+		try {
+			connect = DriverManager.getConnection(  
+			          "jdbc:mysql://localhost:3306/work_together?serverTimezone=UTC","root","123456");
+			Statement stmt = connect.createStatement();
+			//准备填充表格的数据，用于展示数据库中所有的项目
+			ResultSet rs = stmt.executeQuery("select * from repo");
+			column_name.add("repo_name");
+			column_name.add("username");
+			while(rs.next()) 
+			{
+				Vector rowdata = new Vector();
+				rowdata.add(rs.getString("repo_name"));
+				rowdata.add(rs.getString("username"));
+				row.add(rowdata);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//控制软件大小，使得填充满整个屏幕
 		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
 		
@@ -80,23 +114,34 @@ public class after_login extends JFrame {
 		button.setBounds(931, 22, 93, 23);
 		contentPane.add(button);
 		
-		//创建表格
-		final Object rowData[][] = {
-				{"1","2","3"},
-				{"4","5","6"},
-		};
-		final String columnNames[] = {"one","two","three"};
-		table = new JTable(rowData, columnNames);
-		
-		table.setBounds(110, 139, 449, 286);
-		contentPane.add(table);
-		
 		JButton button_1 = new JButton("创建仓库");
+		button_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				//界面跳转
+				new_project window = new new_project();
+				new_project.new_project_frame = window;
+				afterlogin_frame.dispose();
+				window.setVisible(true);
+			}
+		});
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
 		button_1.setBounds(115, 80, 93, 23);
 		contentPane.add(button_1);
+
+//		Vector vector = new Vector();
+//		vector.add("ddd");
+//		 Vector vector1 = new Vector();
+//		vector1.add("ss");
+//		Vector vector2 = new Vector();
+//		vector2.add(vector);
+//		vector2.add(vector);
+//		table = new JTable(vector2,vector1);
+		table = new JTable(row,column_name);
+		table.setBounds(115, 186, 431, 338);
+		contentPane.add(table);
 	}
 }
