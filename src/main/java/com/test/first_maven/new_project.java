@@ -84,6 +84,9 @@ public class new_project extends JFrame {
 					          "jdbc:mysql://localhost:3306/work_together?serverTimezone=UTC","root","123456");
 					Statement stmt = connect.createStatement();
 					stmt.executeUpdate("insert into repo values(\'"+username+"\',\'"+project_name+"\')");
+					//设置下面要跳转进去的repo的名字
+					project pro = new project();
+					pro.SetProjectName(project_name);
 					SSH ssh = new SSH();
 					ssh.exec("mkdir "+username+"/"+project_name);
 					ssh.exec("git init "+username+"/"+project_name);

@@ -145,3 +145,14 @@ public class after_login extends JFrame {
 		contentPane.add(table);
 	}
 }
+
+
+
+
+
+/*注释
+ * 1.在table 点击之后注意将project中project_name变量名称设置一下成当前名称
+ * 
+ * 
+ *
+ */
