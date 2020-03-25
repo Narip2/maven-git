@@ -45,6 +45,8 @@ public class after_login extends JFrame {
 	private JTextField textField;
 	static after_login afterlogin_frame;
 	private JTable table;
+	private JButton button_2;
+	private JButton btnSshKey;
 	
 	
 	/**
@@ -125,7 +127,7 @@ public class after_login extends JFrame {
 				window.setVisible(true);
 			}
 		});
-		button_1.setBounds(115, 80, 93, 23);
+		button_1.setBounds(10, 22, 111, 23);
 		contentPane.add(button_1);
 
 //		Vector vector = new Vector();
@@ -153,6 +155,14 @@ public class after_login extends JFrame {
 		});
 		table.setBounds(115, 186, 431, 338);
 		contentPane.add(table);
+		
+		button_2 = new JButton("打开本地仓库");
+		button_2.setBounds(10, 55, 111, 23);
+		contentPane.add(button_2);
+		
+		btnSshKey = new JButton("SSH Key管理");
+		btnSshKey.setBounds(10, 88, 111, 23);
+		contentPane.add(btnSshKey);
 	}
 }
 

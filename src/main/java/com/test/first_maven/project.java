@@ -23,7 +23,7 @@ public class project extends JFrame {
 	public String username = login.username;
 	private String project_name;
 	private String project_user;
-	private project close_window;
+	private static project close_window;
 	
 	/**
 	 * Launch the application.
@@ -116,6 +116,21 @@ public class project extends JFrame {
 		JButton btnPullRequest = new JButton("Pull Request");
 		btnPullRequest.setBounds(157, 69, 126, 23);
 		contentPane.add(btnPullRequest);
+		
+		JButton button = new JButton("下载到本地");
+		button.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				//打开download_path界面，但是不跳转
+				download_path window = new download_path();
+				window.SetCloseWindow(window);
+				window.SetDownloadProject(project_name);
+				window.SetDownloadUser(project_user);
+				window.setVisible(true);
+			}
+		});
+		button.setBounds(455, 69, 93, 23);
+		contentPane.add(button);
 	}
 }
 
