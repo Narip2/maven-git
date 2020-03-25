@@ -21,7 +21,9 @@ public class project extends JFrame {
 
 	private JPanel contentPane;
 	public String username = login.username;
-	private static String project_name;
+	private String project_name;
+	private String project_user;
+	private project close_window;
 	
 	/**
 	 * Launch the application.
@@ -39,6 +41,18 @@ public class project extends JFrame {
 		});
 	}
 
+	
+	public void SetCloseWindow(project window) {
+		close_window = window;
+	}
+	//用于设置和得到当前项目的username
+	public void SetUser(String username) {
+		project_user = username;
+	}
+	public String GetUser()
+	{
+		return project_user;
+	}
 	//用于更新和设置project_name
 	public void SetProjectName(String proname) {
 		project_name = proname;
@@ -81,11 +95,12 @@ public class project extends JFrame {
 						window.setVisible(true);
 					}else {
 						//没有重名项目，进行Fork
-						//更新table repo
+						//更新服务器目录
 						SSH ssh = new SSH();
-						
-						
-						
+						ssh.exec("mkdir /root/"+username+"/"+project_name);
+						ssh.exec("git init /root/"+username+"/"+project_name);
+						//更新table repo
+						stmt.executeUpdate("insert into repo values (\'"+username+"\',\'"+project_name+"\',\'"+project_user+"\')");
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -103,3 +118,13 @@ public class project extends JFrame {
 		contentPane.add(btnPullRequest);
 	}
 }
+
+
+
+
+
+/* 注意
+ * 1.如果有Bug考虑一下project中是否每次进来都更新正确了project_name 和 project_user这两个变量
+ *
+ * 
+ */

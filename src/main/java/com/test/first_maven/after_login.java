@@ -70,7 +70,7 @@ public class after_login extends JFrame {
 		Connection connect;
 		
 		Vector column_name = new Vector();
-		Vector row = new Vector();
+		final Vector row = new Vector();
 		try {
 			connect = DriverManager.getConnection(  
 			          "jdbc:mysql://localhost:3306/work_together?serverTimezone=UTC","root","123456");
@@ -125,10 +125,6 @@ public class after_login extends JFrame {
 				window.setVisible(true);
 			}
 		});
-		button_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
 		button_1.setBounds(115, 80, 93, 23);
 		contentPane.add(button_1);
 
@@ -141,6 +137,20 @@ public class after_login extends JFrame {
 //		vector2.add(vector);
 //		table = new JTable(vector2,vector1);
 		table = new JTable(row,column_name);
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				int index = table.getSelectedRow();
+				project window = new project();
+				//设置项目名称和所属用户
+				window.SetUser(((Vector) row.elementAt(index)).lastElement().toString());
+				window.SetProjectName(((Vector) row.elementAt(index)).firstElement().toString());
+				afterlogin_frame.dispose();
+				//将window传到project里面，之后关闭的时候好关闭
+				window.SetCloseWindow(window);
+				window.setVisible(true);
+			}
+		});
 		table.setBounds(115, 186, 431, 338);
 		contentPane.add(table);
 	}
@@ -152,6 +162,7 @@ public class after_login extends JFrame {
 
 /*注释
  * 1.在table 点击之后注意将project中project_name变量名称设置一下成当前名称
+ *  并且project_user也需要改变一下
  * 
  * 
  *
