@@ -6,6 +6,12 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.TransportException;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -73,6 +79,8 @@ public class download_path extends JFrame {
 		
 		JButton button = new JButton("浏览");
 		final JFileChooser jfile = new JFileChooser("");
+		//设置模式变成既可以选择文件夹也可以选择单个文件
+		jfile.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		button.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -93,7 +101,22 @@ public class download_path extends JFrame {
 		button_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+				try {
+					Git git = Git.cloneRepository().setURI("root@39.97.255.250:/root/"+download_user+"/"+download_project)
+							.setDirectory(new File(textField.getText()))
+							.call();
+				} catch (InvalidRemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (TransportException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (GitAPIException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				//下载完毕之后直接关闭本窗口
+				close_window.dispose();
 			}
 		});
 		button_1.setBounds(169, 176, 70, 23);
