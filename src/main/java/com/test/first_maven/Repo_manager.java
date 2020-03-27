@@ -10,6 +10,16 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import org.eclipse.jgit.lib.Repository;
+import javax.swing.JEditorPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JList;
+import java.awt.GridLayout;
+import javax.swing.JTextPane;
+import javax.swing.JInternalFrame;
+import javax.swing.JButton;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 
 public class Repo_manager extends JFrame {
 	
@@ -52,8 +62,8 @@ public class Repo_manager extends JFrame {
 				screensize.height);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
+		contentPane.setLayout(null);
+				
 	}
-
 }
