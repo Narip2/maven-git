@@ -117,7 +117,7 @@ public class project extends JFrame {
 		btnPullRequest.setBounds(157, 69, 126, 23);
 		contentPane.add(btnPullRequest);
 		
-		JButton button = new JButton("下载到本地");
+		JButton button = new JButton("Clone");
 		button.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {

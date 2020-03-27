@@ -11,6 +11,11 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.TransportException;
+import org.eclipse.jgit.transport.JschConfigSessionFactory;
+import org.eclipse.jgit.transport.SshSessionFactory;
+import org.eclipse.jgit.transport.OpenSshConfig.Host;
+
+import com.jcraft.jsch.Session;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -102,6 +107,13 @@ public class download_path extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
+					//暂时使用的是密码直接登录的SSH连接方式，之后改进使用公钥的方式
+					SshSessionFactory.setInstance( new JschConfigSessionFactory() {
+					    @Override
+					    protected void configure( Host host, Session session ) {
+					      session.setPassword( "a1b2c3d4E5" );
+					    }
+					} );
 					Git git = Git.cloneRepository().setURI("root@39.97.255.250:/root/"+download_user+"/"+download_project)
 							.setDirectory(new File(textField.getText()))
 							.call();

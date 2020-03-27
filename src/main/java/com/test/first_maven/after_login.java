@@ -9,10 +9,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JEditorPane;
+import javax.swing.JFileChooser;
 import javax.swing.JTree;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -21,6 +26,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -157,6 +164,38 @@ public class after_login extends JFrame {
 		contentPane.add(table);
 		
 		button_2 = new JButton("打开本地仓库");
+		final JFileChooser jfile = new JFileChooser("");
+		jfile.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		button_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				jfile.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				int index = jfile.showSaveDialog(null);
+				//表示无文件选取或正常选取文件
+				if(index == jfile.APPROVE_OPTION) {
+					File file = jfile.getSelectedFile();
+					
+					//打开本地仓库
+					FileRepositoryBuilder repositoryBuilder = new FileRepositoryBuilder();
+					try {
+						Repository repository = repositoryBuilder.setGitDir(new File(file.getAbsolutePath()))
+						                .readEnvironment() // scan environment GIT_* variables
+						                .findGitDir() // scan up the file system tree
+						                .setMustExist(true)
+						                .build();
+						Repo_manager window = new Repo_manager();
+						window.SetCloseWindow(window);
+						window.SetRepository(repository);
+						afterlogin_frame.dispose();
+						window.setVisible(true);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}
+			}
+		});
 		button_2.setBounds(10, 55, 111, 23);
 		contentPane.add(button_2);
 		
