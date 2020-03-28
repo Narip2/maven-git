@@ -90,8 +90,8 @@ public class project extends JFrame {
 					Statement stmt = connect.createStatement();
 					ResultSet rs = stmt.executeQuery("select * from repo where username = \'" + username + "\' and repo_name = \'"+project_name+"\'");
 					if(rs.next()) {
-						Error.message = "仓库已经存在，请更改名字"; 
-						Error window = new Error();
+						Error window = new Error("仓库已经存在，请更改名字");
+						window.SetCloseWindow(window);
 						window.setVisible(true);
 					}else {
 						//没有重名项目，进行Fork

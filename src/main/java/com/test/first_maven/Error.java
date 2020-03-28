@@ -7,31 +7,23 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Error extends JFrame {
-	public static String message;
 	private JPanel contentPane;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Error frame = new Error();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	private Error close_window;
+	
+	
+	public void SetCloseWindow(Error window) {
+		close_window = window;
 	}
 
 	/**
 	 * Create the frame.
 	 */
-	public Error() {
+	public Error(String message) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -42,5 +34,16 @@ public class Error extends JFrame {
 		JLabel label = new JLabel(message);
 		label.setBounds(86, 79, 225, 71);
 		contentPane.add(label);
+		
+		JButton button = new JButton("确定");
+		button.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				close_window.dispose();
+			}
+		});
+		button.setBounds(151, 195, 93, 23);
+		contentPane.add(button);
+		
 	}
 }

@@ -23,13 +23,13 @@ import com.jcraft.jsch.Session;
 
 
 
-public class test {
+public class beta1 {
 	public static void main(String[] args) {
 				try {
 					SshSessionFactory.setInstance( new JschConfigSessionFactory() {
 					    @Override
 					    protected void configure( Host host, Session session ) {
-					      session.setPassword( "1286884843narip" );
+					      session.setPassword( "a1b2c3d4E5" );
 					    }
 					} );
 					Git git = Git.cloneRepository().setURI("git@github.com:Narip2/Apptest.git")
