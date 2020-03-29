@@ -1,4 +1,4 @@
-package com.test.first_maven;
+package Demo;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
-public class beta {
+public class demo {
 	public static void main(String[] args) {
 		FileRepositoryBuilder repositoryBuilder = new FileRepositoryBuilder();
 //		Git.open(new File("/path/to/repo/.git"))

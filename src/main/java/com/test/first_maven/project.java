@@ -21,8 +21,8 @@ public class project extends JFrame {
 
 	private JPanel contentPane;
 	public String username = login.username;
-	private String project_name;
-	private String project_user;
+	public static String project_name;
+	public static String project_user;
 	private static project close_window;
 	
 	/**
@@ -46,20 +46,20 @@ public class project extends JFrame {
 		close_window = window;
 	}
 	//用于设置和得到当前项目的username
-	public void SetUser(String username) {
-		project_user = username;
-	}
-	public String GetUser()
-	{
-		return project_user;
-	}
+//	public void SetUser(String username) {
+//		project_user = username;
+//	}
+//	public String GetUser()
+//	{
+//		return project_user;
+//	}
 	//用于更新和设置project_name
-	public void SetProjectName(String proname) {
-		project_name = proname;
-	}
-	public String GetProjectName() {
-		return project_name;
-	}
+//	public void SetProjectName(String proname) {
+//		project_name = proname;
+//	}
+//	public String GetProjectName() {
+//		return project_name;
+//	}
 	
 	
 	/**
@@ -100,7 +100,7 @@ public class project extends JFrame {
 						ssh.exec("mkdir /root/"+username+"/"+project_name);
 						ssh.exec("git init /root/"+username+"/"+project_name);
 						//更新table repo
-						stmt.executeUpdate("insert into repo values (\'"+username+"\',\'"+project_name+"\',\'"+project_user+"\')");
+						stmt.executeUpdate("insert into repo values (\'"+username+"\',\'"+project_name+"\',\'"+project_user+"\',0)");
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -129,8 +129,24 @@ public class project extends JFrame {
 				window.setVisible(true);
 			}
 		});
-		button.setBounds(455, 69, 93, 23);
+		button.setBounds(438, 69, 93, 23);
 		contentPane.add(button);
+//		if(username.equals(project_user)) {
+		//用于添加一些项目合作人可以不用通过pull request， 而可以直接上传代码之类的
+			JButton button_1 = new JButton("授权");
+			button_1.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					Authorization window = new Authorization();
+					window.SetCloseWindow(window);
+					window.SetProjectName(project_name);
+					window.SetProjectUser(project_user);
+					window.setVisible(true);
+				}
+			});
+			button_1.setBounds(1144, 80, 93, 23);
+			contentPane.add(button_1);
+//		}
 	}
 }
 

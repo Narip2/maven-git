@@ -83,16 +83,19 @@ public class new_project extends JFrame {
 					connect = DriverManager.getConnection(  
 					          "jdbc:mysql://localhost:3306/work_together?serverTimezone=UTC","root","123456");
 					Statement stmt = connect.createStatement();
-					stmt.executeUpdate("insert into repo (username,repo_name) values(\'"+username+"\',\'"+project_name+"\')");
-					//设置下面要跳转进去的repo的名字
-					project pro = new project();
-					pro.SetProjectName(project_name);
-					pro.SetUser(username);
+					//插入数据库
+					stmt.executeUpdate("insert into repo (username,repo_name,auth) values(\'"+username+"\',\'"+project_name+"\',1)");
 					
+					//在服务器上创建文件并初始化
 					SSH ssh = new SSH();
 					ssh.exec("mkdir "+username+"/"+project_name);
 					ssh.exec("git init "+username+"/"+project_name);
+					
+					//设置下面要跳转进去的repo的名字
+					project.project_name = project_name;
+					project.project_user = username;
 					project window = new project();
+					window.SetCloseWindow(window);
 					new_project_frame.dispose();
 					window.setVisible(true);
 				} catch (SQLException e1) {

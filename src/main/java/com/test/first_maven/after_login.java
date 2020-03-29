@@ -54,6 +54,12 @@ public class after_login extends JFrame {
 	private JTable table;
 	private JButton button_2;
 	private JButton btnSshKey;
+	private JButton button_3;
+	private int auth_num = 0;
+	private int pull_num = 0;
+	Connection connect;
+	private JButton button_4;
+	private JTable table_1;
 	
 	
 	/**
@@ -76,7 +82,6 @@ public class after_login extends JFrame {
 	 * Create the frame.
 	 */
 	public after_login() {
-		Connection connect;
 		
 		Vector column_name = new Vector();
 		final Vector row = new Vector();
@@ -150,10 +155,10 @@ public class after_login extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				int index = table.getSelectedRow();
+				project.project_user = ((Vector) row.elementAt(index)).lastElement().toString();
+				project.project_name = ((Vector) row.elementAt(index)).firstElement().toString();
 				project window = new project();
 				//设置项目名称和所属用户
-				window.SetUser(((Vector) row.elementAt(index)).lastElement().toString());
-				window.SetProjectName(((Vector) row.elementAt(index)).firstElement().toString());
 				afterlogin_frame.dispose();
 				//将window传到project里面，之后关闭的时候好关闭
 				window.SetCloseWindow(window);
@@ -202,6 +207,39 @@ public class after_login extends JFrame {
 		btnSshKey = new JButton("SSH Key管理");
 		btnSshKey.setBounds(10, 88, 111, 23);
 		contentPane.add(btnSshKey);
+		
+		try {
+			Statement stmt = connect.createStatement();
+			//查询得到授权邀请信息条数
+			ResultSet rs = stmt.executeQuery("select * from repo where username = \'"+login.username+"\' and auth = 2");
+			rs.last();
+			auth_num = rs.getRow();
+			//查询得到收到的pull request条数
+			rs = stmt.executeQuery("select * from repo where fork_from = \'"+login.username+"\' and auth = 3");
+			rs.last();
+			pull_num = rs.getRow();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		button_3 = new JButton("消息"+"("+(auth_num+pull_num)+")");
+		button_3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//点击之后跳转到详细消息页面，其中有pull request 和 授权邀请信息
+				//注意如果拒绝邀请，需要删除数据库中这一项，如果接受邀请，需要将数据库中这一项的auth修改成1
+				//pull request如果接受需要将auth这一项从3修改成0,如果拒绝也需要将其中的3修改成0，同时进行拉取操作
+				
+				
+			}
+		});
+		button_3.setBounds(10, 124, 111, 23);
+		contentPane.add(button_3);
+		
+		table_1 = new JTable();
+		table_1.setBounds(688, 186, 431, 338);
+		contentPane.add(table_1);
+		
 	}
 }
 

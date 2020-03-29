@@ -2,7 +2,7 @@
  * 
  */
 
-package com.test.first_maven;
+package Demo;
 
 import java.io.File;
 
@@ -23,7 +23,7 @@ import com.jcraft.jsch.Session;
 
 
 
-public class beta1 {
+public class demo1 {
 	public static void main(String[] args) {
 				try {
 					SshSessionFactory.setInstance( new JschConfigSessionFactory() {
