@@ -89,7 +89,7 @@ public class new_project extends JFrame {
 					//在服务器上创建文件并初始化
 					SSH ssh = new SSH();
 					ssh.exec("mkdir "+username+"/"+project_name);
-					ssh.exec("git init "+username+"/"+project_name);
+					ssh.exec("git init --bare "+username+"/"+project_name);
 					
 					//设置下面要跳转进去的repo的名字
 					project.project_name = project_name;

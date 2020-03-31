@@ -3,6 +3,7 @@ package com.test.first_maven;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import com.jcraft.jsch.Channel;
@@ -37,6 +38,14 @@ public class SSH{
              ((ChannelExec)channel).setErrStream(System.err);
 
              channel.connect();
+             //从命令行输入，用于debug
+             InputStream in = channel.getInputStream();
+             BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
+             String buf = null;
+             while ((buf = reader.readLine()) != null){
+                 System.out.println(buf);
+             }
+             reader.close();
              channel.disconnect();
              session.disconnect();
          }

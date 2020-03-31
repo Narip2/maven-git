@@ -8,9 +8,25 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.TransportException;
+import org.eclipse.jgit.transport.JschConfigSessionFactory;
+import org.eclipse.jgit.transport.SshSessionFactory;
+import org.eclipse.jgit.transport.OpenSshConfig.Host;
+
+import com.jcraft.jsch.Session;
+
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -95,10 +111,12 @@ public class project extends JFrame {
 						window.setVisible(true);
 					}else {
 						//没有重名项目，进行Fork
-						//更新服务器目录
+						//使用clone的方式实现fork
+						//服务器自己克隆到服务器中
+						//Clone 裸仓库 clone --bare
+						//在服务器上项目名称
 						SSH ssh = new SSH();
-						ssh.exec("mkdir /root/"+username+"/"+project_name);
-						ssh.exec("git init /root/"+username+"/"+project_name);
+						ssh.exec("git clone --bare root@39.97.255.250:/root/"+project_user+"/"+project_name+" /root/"+username+"/"+project_name);
 						//更新table repo
 						stmt.executeUpdate("insert into repo values (\'"+username+"\',\'"+project_name+"\',\'"+project_user+"\',0)");
 					}
@@ -131,7 +149,7 @@ public class project extends JFrame {
 		});
 		button.setBounds(438, 69, 93, 23);
 		contentPane.add(button);
-//		if(username.equals(project_user)) {
+		if(username.equals(project_user)) {
 		//用于添加一些项目合作人可以不用通过pull request， 而可以直接上传代码之类的
 			JButton button_1 = new JButton("授权");
 			button_1.addMouseListener(new MouseAdapter() {
@@ -146,7 +164,7 @@ public class project extends JFrame {
 			});
 			button_1.setBounds(1144, 80, 93, 23);
 			contentPane.add(button_1);
-//		}
+		}
 	}
 }
 

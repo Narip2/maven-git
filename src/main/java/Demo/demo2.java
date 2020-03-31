@@ -1,53 +1,92 @@
 package Demo;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Properties;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
-import org.eclipse.jgit.api.errors.TransportException;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.eclipse.jgit.transport.JschConfigSessionFactory;
-import org.eclipse.jgit.transport.SshSessionFactory;
-import org.eclipse.jgit.transport.OpenSshConfig.Host;
-import org.eclipse.jgit.util.ProcessResult.Status;
-
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.UserInfo;
 
-public class demo2 {
-	public static void main(String args[]) {
-		SshSessionFactory.setInstance( new JschConfigSessionFactory() {
-		    @Override
-		    protected void configure( Host host, Session session ) {
-		      session.setPassword( "a1b2c3d4E5" );
-		    }
-		} );
-		FileRepositoryBuilder repositoryBuilder = new FileRepositoryBuilder();
-		Repository repo;
-		try {
-			repo = repositoryBuilder.setGitDir(new File("D:\\github\\demo\\.git"))
-			        .readEnvironment() // scan environment GIT_* variables
-			        .findGitDir() // scan up the file system tree
-			        .setMustExist(true)
-			        .build();
-			Git git = new Git(repo);
-			git.push().call();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvalidRemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransportException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (GitAPIException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-	}
+public class demo2{
+    private static final String USER="root";
+    private static final String PASSWORD="a1b2c3d4E5";
+    private static final String HOST="39.97.255.250";
+    private static final int DEFAULT_SSH_PORT=22;
+
+    
+    public static void exec() {
+    	 try{
+    		 String command = "git clone --bare root@39.97.255.250:/root/narip/demo /root/narip2/demo";
+             JSch jsch=new JSch();
+
+             Session session = jsch.getSession(USER,HOST,DEFAULT_SSH_PORT);
+             session.setPassword(PASSWORD);
+             Properties config = new Properties();
+             config.put("StrictHostKeyChecking", "no");
+
+             // username and password will be given via UserInfo interface.
+             session.setUserInfo(new MyUserInfo());
+             session.connect();
+
+             Channel channel=session.openChannel("exec");
+             ((ChannelExec)channel).setCommand(command);
+
+             channel.setInputStream(null);
+
+             ((ChannelExec)channel).setErrStream(System.err);
+             
+             channel.connect();
+             
+             InputStream in = channel.getInputStream();
+             BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
+             String buf = null;
+             while ((buf = reader.readLine()) != null){
+                 System.out.println(buf);
+             }
+             reader.close();
+             channel.disconnect();
+             session.disconnect();
+         }
+         catch(Exception e){
+             System.out.println(e);
+         }
+    	 
+    }
+
+    private static class MyUserInfo implements UserInfo{
+        public String getPassphrase() {
+            System.out.println("getPassphrase");
+            return null;
+        }
+        public String getPassword() {
+            System.out.println("getPassword");
+            return null;
+        }
+        public boolean promptPassword(String s) {
+            System.out.println("promptPassword:"+s);
+            return false;
+        }
+        public boolean promptPassphrase(String s) {
+            System.out.println("promptPassphrase:"+s);
+            return false;
+        }
+        public boolean promptYesNo(String s) {
+            System.out.println("promptYesNo:"+s);
+            return true;//notice here!
+        }
+        public void showMessage(String s) {
+            System.out.println("showMessage:"+s);
+        }
+    }
+    public static void main(String [] args) {
+    	exec();
+    }    
+    
 }
+       
