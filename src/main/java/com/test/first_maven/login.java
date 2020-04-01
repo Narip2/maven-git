@@ -149,15 +149,20 @@ public class login extends JFrame {
 							}
 							else
 							{
-								ResultSet rs = stmt.executeQuery("select * from user where username = \'"+username+"\'");
-								if(rs.next())
+								if(username.matches("[a-zA-Z0-9_]+"))
 								{
-									label_2.setText("账号已存在，请直接登录!");
-								}else {
-									stmt.executeUpdate("insert into user values(\'"+username+"\',\'"+passwd+"\')");
-									SSH ssh = new SSH();
-									ssh.exec("mkdir "+username);
-									label_2.setText("账号创建成功，请登录!");
+									ResultSet rs = stmt.executeQuery("select * from user where username = \'"+username+"\'");
+									if(rs.next())
+									{
+										label_2.setText("账号已存在，请直接登录!");
+									}else {
+										stmt.executeUpdate("insert into user values(\'"+username+"\',\'"+passwd+"\')");
+										SSH ssh = new SSH();
+										ssh.exec("mkdir "+username);
+										label_2.setText("账号创建成功，请登录!");
+									}
+								}else{
+									label_2.setText("名称不符合规范，只能输入字母或数字或下划线");
 								}
 							}
 							
