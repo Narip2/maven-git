@@ -229,8 +229,11 @@ public class after_login extends JFrame {
 				//点击之后跳转到详细消息页面，其中有pull request 和 授权邀请信息
 				//注意如果拒绝邀请，需要删除数据库中这一项，如果接受邀请，需要将数据库中这一项的auth修改成1
 				//pull request如果接受需要将auth这一项从3修改成0,如果拒绝也需要将其中的3修改成0，同时进行拉取操作
-				
-				
+				//界面跳转
+				Message window = new Message();
+				window.SetCloseWindow(window);
+				afterlogin_frame.dispose();
+				window.setVisible(true);
 			}
 		});
 		button_3.setBounds(10, 124, 111, 23);
