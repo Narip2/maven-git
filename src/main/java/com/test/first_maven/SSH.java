@@ -63,11 +63,15 @@ public class SSH{
          }
     }
     
-    public Vector<String> GetBranch(String user){
-    	exec("git branch");
+    //返回对应user的branch
+    public Vector<String> GetBranch(String user, String proname){
+    	exec("cd /root/"+user+"/"+proname+" && git branch");
     	Vector<String> temp = new Vector<String>();
-    	temp = output;
-    	
+    	temp = (Vector)output.clone();
+    	for(int i = 0; i < temp.size(); i++) {
+    		temp.set(i, temp.get(i).substring(1));
+    	}
+    	return temp;
     }
 
     private static class MyUserInfo implements UserInfo{

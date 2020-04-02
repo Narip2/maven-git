@@ -159,7 +159,13 @@ public class project extends JFrame {
 						window.SetCloseWindow(window);
 						window.SetFromUser(project_user);
 						window.SetRepoName(project_name);
-						window.SetToUser(rs.getString("fork_from"));
+						String fk_from = rs.getString("fork_from");
+						window.SetToUser(fk_from);
+						SSH ssh = new SSH();
+						window.SetFromBranch(ssh.GetBranch(project_user, project_name));
+						window.SetToBranch(ssh.GetBranch(fk_from, project_name));
+						
+						
 						window.RefreshLabel();
 						close_window.dispose();
 						window.setVisible(true);		

@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,6 +19,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Vector;
 
 public class Create_PR extends JFrame {
 
@@ -27,6 +29,12 @@ public class Create_PR extends JFrame {
 	private String repo_name;
 	private String to_user;
 	private JLabel lblNewLabel_1;
+	private JLabel lblNewLabel;
+	private JComboBox comboBox;
+	private JComboBox comboBox_1;
+	//from 和 to 不需要分配空间，因为不涉及vector的修改操作
+	private Vector<String> from;
+	private Vector<String> to;
 	
 	public void SetCloseWindow(Create_PR window) {
 		close_window = window;
@@ -41,9 +49,20 @@ public class Create_PR extends JFrame {
 		to_user = user;
 	}
 	public void RefreshLabel() {
-		lblNewLabel_1.setText(to_user+"/");
+		lblNewLabel_1.setText(to_user+"/"+repo_name+"/");
+		lblNewLabel.setText(from_user+"/"+repo_name+"/");
+		comboBox.setModel(new DefaultComboBoxModel(from));
+		comboBox_1.setModel(new DefaultComboBoxModel(to));
+		
 	}
-	
+	public void SetFromBranch(Vector<String> f_v) {
+		from = f_v;
+		System.out.println(f_v);
+	}
+	public void SetToBranch(Vector<String> t_v) {
+		to = t_v;
+		System.out.println(t_v);
+	}
 	
 	/**
 	 * Create the frame.
@@ -61,15 +80,15 @@ public class Create_PR extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JComboBox comboBox = new JComboBox();
+		comboBox = new JComboBox();
 		comboBox.setBounds(160, 83, 111, 23);
 		contentPane.add(comboBox);
 		
-		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1 = new JComboBox();
 		comboBox_1.setBounds(606, 83, 111, 23);
 		contentPane.add(comboBox_1);
 		
-		JLabel lblNewLabel = new JLabel(login.username+"/");
+		lblNewLabel = new JLabel();
 		lblNewLabel.setBounds(39, 83, 111, 23);
 		contentPane.add(lblNewLabel);
 		
