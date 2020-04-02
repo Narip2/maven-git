@@ -74,6 +74,8 @@ public class login extends JFrame {
 	private JTextField textField;
 	private JPasswordField passwordField;
 	public static String username;
+	public static String temp_pro_name;
+	public static String temp_pro_user;
 	public String passwd;
 	static login login_frame;
 	/**

@@ -40,6 +40,7 @@ public class project extends JFrame {
 	public static String project_name;
 	public static String project_user;
 	private static project close_window;
+	private Connection connect;
 	
 	/**
 	 * Launch the application.
@@ -60,6 +61,14 @@ public class project extends JFrame {
 	
 	public void SetCloseWindow(project window) {
 		close_window = window;
+	}
+	public void SaveState() {
+		login.temp_pro_name = project_name;
+		login.temp_pro_user = project_user;
+	}
+	public void LoadState() {
+		project_name = login.temp_pro_name;
+		project_user = login.temp_pro_user;
 	}
 	//用于设置和得到当前项目的username
 //	public void SetUser(String username) {
@@ -82,6 +91,13 @@ public class project extends JFrame {
 	 * Create the frame.
 	 */
 	public project() {
+		try {
+			connect = DriverManager.getConnection(  
+			          "jdbc:mysql://localhost:3306/work_together?serverTimezone=UTC","root","123456");
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//控制软件大小，使得填充满整个屏幕
 		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -101,8 +117,6 @@ public class project extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				//首先检查数据库中没有重名项目
 				try {
-					Connection connect = DriverManager.getConnection(  
-					          "jdbc:mysql://localhost:3306/work_together?serverTimezone=UTC","root","123456");
 					Statement stmt = connect.createStatement();
 					ResultSet rs = stmt.executeQuery("select * from repo where username = \'" + username + "\' and repo_name = \'"+project_name+"\'");
 					if(rs.next()) {
@@ -130,8 +144,36 @@ public class project extends JFrame {
 		});
 		btnFork.setBounds(313, 69, 93, 23);
 		contentPane.add(btnFork);
-		
-		JButton btnPullRequest = new JButton("Pull Request");
+		JButton btnPullRequest = new JButton("+ Pull Request");
+		btnPullRequest.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//查询数据库获取一定信息
+				try {
+					Statement stmt = connect.createStatement();
+					ResultSet rs  = stmt.executeQuery("select * from repo where username = \'"+project_user+"\' and repo_name = \'"+project_name+"\'");
+					if(rs.next()) {
+						//跳转到create_PR 界面
+						Create_PR window = new Create_PR();
+						SaveState();
+						window.SetCloseWindow(window);
+						window.SetFromUser(project_user);
+						window.SetRepoName(project_name);
+						window.SetToUser(rs.getString("fork_from"));
+						window.RefreshLabel();
+						close_window.dispose();
+						window.setVisible(true);		
+					}else {
+						System.out.println("查询为空 error");
+					}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
+			}
+		});
 		btnPullRequest.setBounds(157, 69, 126, 23);
 		contentPane.add(btnPullRequest);
 		

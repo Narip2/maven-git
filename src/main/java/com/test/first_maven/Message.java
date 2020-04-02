@@ -183,6 +183,11 @@ public class Message extends JFrame {
 				else if(str.contains("针")) {
 					//跳转到Pull_request窗口，查看pull requst的不同
 					//注意修改构造函数，好跳转之后不用刷新直接显示内容
+					Pull_request window = new Pull_request();
+					window.SetCloseWindow(window);
+					window.FreshList();
+					Close_Window.dispose();
+					window.setVisible(true);
 					
 					
 				}//同意合作

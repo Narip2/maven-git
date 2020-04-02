@@ -1,11 +1,17 @@
 package Demo;
 
+import java.util.Vector;
+
+import com.test.first_maven.SSH;
+
 public class demo3 {
 	public static void main(String[] args) {
-		String str = "zzy同意你针对项目hahaha的合作请求";
-//		System.out.println(str.substring(0, str.indexOf("同")));
-//		System.out.println(str.indexOf("同意"));
-//		System.out.println(str.indexOf("同"));
-		System.out.println(str.indexOf(""));
+		Vector a = new Vector();
+		Object b;
+		a.add("1");
+		a.add("2");
+		b = a.clone();
+		a.clear();
+		
 	}
 }

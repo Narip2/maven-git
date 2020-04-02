@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
@@ -18,7 +19,12 @@ public class SSH{
     private static final String PASSWORD="a1b2c3d4E5";
     private static final String HOST="39.97.255.250";
     private static final int DEFAULT_SSH_PORT=22;
+    private Vector<String> output;
 
+    public Vector<String> GetOutput(String str) {
+    	return output;
+    }
+    
     public void exec(String command) {
     	 try{
              JSch jsch=new JSch();
@@ -42,9 +48,12 @@ public class SSH{
              InputStream in = channel.getInputStream();
              BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
              String buf = null;
+             Vector<String> str = new Vector<String>();
              while ((buf = reader.readLine()) != null){
+            	 str.add(buf);
                  System.out.println(buf);
              }
+             output = str;
              reader.close();
              channel.disconnect();
              session.disconnect();
@@ -52,6 +61,13 @@ public class SSH{
          catch(Exception e){
              System.out.println(e);
          }
+    }
+    
+    public Vector<String> GetBranch(String user){
+    	exec("git branch");
+    	Vector<String> temp = new Vector<String>();
+    	temp = output;
+    	
     }
 
     private static class MyUserInfo implements UserInfo{
