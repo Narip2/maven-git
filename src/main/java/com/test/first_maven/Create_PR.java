@@ -20,18 +20,25 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Vector;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.event.PopupMenuEvent;
 
 public class Create_PR extends JFrame {
 
 	private JPanel contentPane;
 	private Create_PR close_window;
+	
 	private String from_user;
 	private String repo_name;
 	private String to_user;
+	private String from_branch;
+	private String to_branch;
+	
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel;
 	private JComboBox comboBox;
 	private JComboBox comboBox_1;
+	private JTextArea textArea;
 	//from 和 to 不需要分配空间，因为不涉及vector的修改操作
 	private Vector<String> from;
 	private Vector<String> to;
@@ -48,7 +55,11 @@ public class Create_PR extends JFrame {
 	public void SetToUser(String user) {
 		to_user = user;
 	}
-	public void RefreshLabel() {
+	public void Init() {
+		//初始化branch
+		from_branch = from.get(0);
+		to_branch = to.get(0);
+		//初始化标签显示数据
 		lblNewLabel_1.setText(to_user+"/"+repo_name+"/");
 		lblNewLabel.setText(from_user+"/"+repo_name+"/");
 		comboBox.setModel(new DefaultComboBoxModel(from));
@@ -62,6 +73,21 @@ public class Create_PR extends JFrame {
 	public void SetToBranch(Vector<String> t_v) {
 		to = t_v;
 		System.out.println(t_v);
+	}
+	public void ShowDiff() {
+		SSH ssh = new SSH();
+		Vector<String> str = new Vector<String>();
+		ssh.exec("cd /root/"+to_user+"/"+repo_name+" &&git fetch root@39.97.255.250:/root/"+from_user+"/"+repo_name+" "+from_branch+" &&git diff "+to_branch+" FETCH_HEAD");
+		str = ssh.GetOutput();
+		String show = "";
+//		for(int i = 0; i < str.size(); i++) {
+//			str.set(i, str.get(i)+"\n");
+//		}
+		for(String temp:str) {
+			show += temp;
+			show += "\n";
+		}
+		textArea.setText(show);
 	}
 	
 	/**
@@ -81,10 +107,32 @@ public class Create_PR extends JFrame {
 		contentPane.setLayout(null);
 		
 		comboBox = new JComboBox();
+		comboBox.addPopupMenuListener(new PopupMenuListener() {
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+			}
+			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+				int index = comboBox.getSelectedIndex();
+				from_branch = from.get(index);
+				ShowDiff();
+			}
+			public void popupMenuCanceled(PopupMenuEvent e) {
+			}
+		});
 		comboBox.setBounds(160, 83, 111, 23);
 		contentPane.add(comboBox);
 		
 		comboBox_1 = new JComboBox();
+		comboBox_1.addPopupMenuListener(new PopupMenuListener() {
+			public void popupMenuCanceled(PopupMenuEvent e) {
+			}
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				int index = comboBox_1.getSelectedIndex();
+				to_branch = to.get(index);
+				ShowDiff();
+			}
+			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+			}
+		});
 		comboBox_1.setBounds(606, 83, 111, 23);
 		contentPane.add(comboBox_1);
 		
@@ -96,7 +144,7 @@ public class Create_PR extends JFrame {
 		lblNewLabel_1.setBounds(485, 83, 111, 23);
 		contentPane.add(lblNewLabel_1);
 		
-		JTextArea textArea = new JTextArea();
+		textArea = new JTextArea();
 		textArea.setEditable(false);
 		textArea.setBounds(103, 208, 620, 419);
 		contentPane.add(textArea);

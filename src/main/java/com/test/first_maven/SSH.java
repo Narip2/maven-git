@@ -21,7 +21,7 @@ public class SSH{
     private static final int DEFAULT_SSH_PORT=22;
     private Vector<String> output;
 
-    public Vector<String> GetOutput(String str) {
+    public Vector<String> GetOutput() {
     	return output;
     }
     

@@ -138,8 +138,6 @@ public class project extends JFrame {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				//更新数据库repo内容
-				
 			}
 		});
 		btnFork.setBounds(313, 69, 93, 23);
@@ -166,7 +164,7 @@ public class project extends JFrame {
 						window.SetToBranch(ssh.GetBranch(fk_from, project_name));
 						
 						
-						window.RefreshLabel();
+						window.Init();
 						close_window.dispose();
 						window.setVisible(true);		
 					}else {
