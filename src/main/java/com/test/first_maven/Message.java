@@ -62,9 +62,10 @@ public class Message extends JFrame {
 				msg.add(rs.getString("fork_from")+"邀请您一起和ta合作"+rs.getString("repo_name")+"项目");
 			}
 			//查询有没有pull request的请求
-			rs = stmt.executeQuery("select * from repo where auth = 3 and fork_from = \'"+login_user+"\'");
+			rs = stmt.executeQuery("select * from pull_request where to_user = \'"+login_user+"\' and flag = 0");
+//			rs = stmt.executeQuery("select * from repo where auth = 3 and fork_from = \'"+login_user+"\'");
 			while(rs.next()) {
-				msg.add(rs.getString("username")+"针对你的"+rs.getString("repo_name")+"项目发起了pull request，点击查看详情");
+				msg.add(rs.getString("from_user")+"针对你的"+rs.getString("repo_name")+"项目,"+"从他的"+rs.getString("from_branch")+"远程分支到你的"+rs.getString("to_branch")+"分支发起了pull request，点击查看详情");
 			}
 			
 			//查询同意合作的
@@ -80,14 +81,16 @@ public class Message extends JFrame {
 			}
 			
 			//查询同意pull request的
-			rs = stmt.executeQuery("select * from repo where auth = 5 and username = \'"+login_user+"\'");
+			rs = stmt.executeQuery("select * from pull_request where from_user =\'"+login_user+"\' and flag = 1");
+//			rs = stmt.executeQuery("select * from repo where auth = 5 and username = \'"+login_user+"\'");
 			while(rs.next()) {
-				msg.add(rs.getString("fork_from")+"同意了你对"+rs.getString("repo_name")+"项目的pull request请求");	
+				msg.add(rs.getString("to_user")+"同意了你的"+rs.getString("repo_name")+"项目"+rs.getString("from_branch")+"分支"+"的pull request请求");	
 			}
 			//查询拒绝pull request的
-			rs = stmt.executeQuery("select * from repo where auth = -5 and username = \'"+login_user+"\'");
+//			rs = stmt.executeQuery("select * from repo where auth = -5 and username = \'"+login_user+"\'");
+			rs = stmt.executeQuery("select * from pull_request where from_user =\'"+login_user+"\' and flag = -1");
 			while(rs.next()) {
-				msg.add(rs.getString("fork_from")+"拒绝了你对"+rs.getString("repo_name")+"项目的pull request请求");	
+				msg.add(rs.getString("to_user")+"拒绝了你的"+rs.getString("repo_name")+"项目"+rs.getString("from_branch")+"分支"+"的pull request请求");	
 			}
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
@@ -152,7 +155,7 @@ public class Message extends JFrame {
 					Choose cs = new Choose("请选择是否接受这个邀请","拒绝","接受");
 					cs.setVisible(true);
 					String username = str.substring(0,str.indexOf("邀"));
-					String proname = str.substring(str.indexOf("合作")+1,str.indexOf("项目"));
+					String proname = str.substring(str.indexOf("合作")+2,str.indexOf("项目"));
 					//2表示是 接受1表示拒绝
 					if(cs.GetBtnChoice() == 2) {
 						//执行SSH的fork(clone)操作
@@ -187,6 +190,12 @@ public class Message extends JFrame {
 					window.SetCloseWindow(window);
 					window.FreshList();
 					Close_Window.dispose();
+					//设置一些需要传递的变量
+//					msg.add(rs.getString("from_user")+"针对你的"+rs.getString("repo_name")+"项目,"+"从他的"+rs.getString("from_branch")+"远程分支到你的"+rs.getString("to_branch")+"分支发起了pull request，点击查看详情");
+					window.SetFromUser(str.substring(0,str.indexOf("针对")));
+					window.SetFromBranch(str.substring(str.indexOf("他的")+2,str.indexOf("远程")));
+					window.SetRepoName(str.substring(str.indexOf("你的")+2,str.indexOf("项目")));
+					window.SetToBranch(str.substring(str.indexOf("到你的")+3,str.indexOf("分支发")));
 					window.setVisible(true);
 					
 					
@@ -221,12 +230,14 @@ public class Message extends JFrame {
 				}//同意pull request
 				else if(str.contains("同意")&&str.contains("的pull")) {//加上中文 '的' 防止项目名称含有pull的混入
 					//修改数据库执行删除消息操作
-					String username = str.substring(0,str.indexOf("同意"));
-					String proname = str.substring(str.indexOf("对")+1, str.indexOf("项目"));
+					String proname = str.substring(str.indexOf("你的")+2, str.indexOf("项目"));
+					String branch = str.substring(str.indexOf("项目")+2,str.indexOf("分支"));
 					//修改数据库
 					try {
 						//默认修改auth = 0. 因为既然用了pull request，就没有权限直接去
-						stmt.executeUpdate("update repo set auth = 0 where auth = 5 and fork_from = \'"+username+"\' and repo_name = \'"+proname+"\'");
+//						stmt.executeUpdate("update repo set auth = 0 where auth = 5 and fork_from = \'"+username+"\' and repo_name = \'"+proname+"\'");
+						//修改pull_request表格
+						stmt.executeUpdate("delete from pull request where from_user = \'"+login.username+"\' and repo_name = \'"+proname+"\' and from_branch = \'"+branch+"\'");
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -236,10 +247,10 @@ public class Message extends JFrame {
 				}//拒绝pull request
 				else if(str.contains("拒绝")&&str.contains("的pull")) {
 					//修改数据库执行删除消息操作
-					String username = str.substring(0,str.indexOf("拒绝"));
-					String proname = str.substring(str.indexOf("对")+1, str.indexOf("项目"));
+					String proname = str.substring(str.indexOf("你的")+2, str.indexOf("项目"));
+					String branch = str.substring(str.indexOf("项目")+2,str.indexOf("分支"));
 					try {
-						stmt.executeUpdate("update repo set auth = 0 where auth = -5 and fork_from = \'"+username+"\' and repo_name = \'"+proname+"\'");
+						stmt.executeUpdate("delete from pull request where from_user = \'"+login.username+"\' and repo_name = \'"+proname+"\' and from_branch = \'"+branch+"\'");
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

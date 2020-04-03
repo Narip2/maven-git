@@ -159,9 +159,15 @@ public class Create_PR extends JFrame {
 					connect = DriverManager.getConnection(  
 					          "jdbc:mysql://localhost:3306/work_together?serverTimezone=UTC","root","123456");
 					Statement stmt = connect.createStatement();
-					stmt.executeUpdate("insert into pull_request values(\'"+from_user+"\',");
+					//flag 位0表示未回应，1表示同意，-1表示拒绝
+					stmt.executeUpdate("insert into pull_request values(\'"+from_user+"\',\'"+from_branch+"\',\'"+repo_name+"\',\'"+to_user+"\',\'"+to_branch+"\'，0)");
 					
-					
+					//和返回按钮执行一样的功能
+					project window =  new project();
+					window.SetCloseWindow(window);
+					window.LoadState();
+					close_window.dispose();
+					window.setVisible(true);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

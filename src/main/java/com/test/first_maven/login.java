@@ -74,6 +74,8 @@ public class login extends JFrame {
 	private JTextField textField;
 	private JPasswordField passwordField;
 	public static String username;
+	//temp_pro_name用于表示现在打开或者处理的项目名称，直到打开下一个项目为止不更新
+	//temp_pro_user用于表示现在打开或者处理的项目创建者 直到打开下一个项目为止不更新
 	public static String temp_pro_name;
 	public static String temp_pro_user;
 	public String passwd;
