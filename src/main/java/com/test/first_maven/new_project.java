@@ -90,44 +90,54 @@ public class new_project extends JFrame {
 				}
 				//需要用README初始化
 				if(chckbxNewCheckBox.isSelected()) {
-					
+					SSH ssh = new SSH();
+					//创建对应项目
+					ssh.exec("mkdir "+username+"/"+project_name);
+					ssh.exec("git init --bare "+username+"/"+project_name);
+					//克隆对应项目到默认目录 .init 然后上传README 最后删除.init中文件
+					ssh.exec("mkdir .init");
+					ssh.exec("git clone root@39.97.255.250:/root/"+username+"/"+project_name+" /root/.init/");
+					ssh.exec("touch /root/.init/README");
+					ssh.exec("cd /root/.init && git add . && git commit README -m \"README\" && git push origin master");
+					ssh.exec("rm -rf .init");
 				}//不需要用README初始化
 				else{
-					try {
-			
-						Statement stmt = connect.createStatement();
-						//插入数据库
-						stmt.executeUpdate("insert into repo (username,repo_name,auth) values(\'"+username+"\',\'"+project_name+"\',1)");
-						
 						//在服务器上创建文件并初始化
 						SSH ssh = new SSH();
 						ssh.exec("mkdir "+username+"/"+project_name);
 						ssh.exec("git init --bare "+username+"/"+project_name);
-						
-						//设置下面要跳转进去的repo的名字
-						project.project_name = project_name;
-						project.project_user = username;
-						project window = new project();
-						window.SetCloseWindow(window);
-						new_project_frame.dispose();
-						window.setVisible(true);
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-			
 				}
+				Statement stmt;
+				try {
+					stmt = connect.createStatement();
+					//插入数据库
+					stmt.executeUpdate("insert into repo (username,repo_name,auth) values(\'"+username+"\',\'"+project_name+"\',1)");
+					
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				//设置下面要跳转进去的repo的名字
+				project.project_name = project_name;
+				project.project_user = username;
+				project window = new project();
+				window.SetCloseWindow(window);
+				new_project_frame.dispose();
+				window.setVisible(true);
+
+				
+
 					}
 		});
 		button.setBounds(127, 153, 93, 23);
 		contentPane.add(button);
 		
 		JLabel lblNewLabel = new JLabel("创建初始化文件README");
-		lblNewLabel.setBounds(126, 93, 126, 21);
+		lblNewLabel.setBounds(126, 93, 163, 21);
 		contentPane.add(lblNewLabel);
 		
 		chckbxNewCheckBox = new JCheckBox();
-		chckbxNewCheckBox.setBounds(92, 93, 103, 23);
+		chckbxNewCheckBox.setBounds(92, 93, 25, 23);
 		contentPane.add(chckbxNewCheckBox);
 	}
 }

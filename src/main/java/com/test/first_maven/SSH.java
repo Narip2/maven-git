@@ -69,7 +69,7 @@ public class SSH{
     	Vector<String> temp = new Vector<String>();
     	temp = (Vector)output.clone();
     	for(int i = 0; i < temp.size(); i++) {
-    		temp.set(i, temp.get(i).substring(1));
+    		temp.set(i, temp.get(i).substring(2));
     	}
     	return temp;
     }
