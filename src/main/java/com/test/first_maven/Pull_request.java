@@ -118,10 +118,20 @@ public class Pull_request extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				//在远程服务器实行merge操作
 				//但是由于远程仓库都为裸仓库，所以需要在远程服务器上利用clone再push的方法实现merge
+				//git push <远程主机名> <本地分支>:<远程分支>        冒号以及后面的可以省略 默认到master
 				SSH ssh = new SSH();
 				ssh.exec("mkdir .init && cd .init &&git clone root@39.97.255.250:/root/"+from_user+"/"+repo_name
-						+" &&git push root@39.97.255.250:/root/");
+						+" &&git push root@39.97.255.250:/root/"+to_user+"/"+repo_name+" "+from_branch+":"+to_branch
+						+" &&cd .. && rm -rf .init");
 				//更新数据库
+				try {
+					Statement stmt = connect.createStatement();
+					stmt.executeUpdate("update pull_request set flag = 1 where from_user = \'"
+							+from_user+"\' and from_branch = \'"+from_branch+"\' and repo_name = \'"+repo_name+"\'");
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				//返回到message窗口
 				BackToMsg();
 			}
