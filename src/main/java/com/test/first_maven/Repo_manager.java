@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JFrame;
@@ -21,6 +22,7 @@ import org.eclipse.jgit.api.errors.NoMessageException;
 import org.eclipse.jgit.api.errors.UnmergedPathsException;
 import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import javax.swing.JEditorPane;
 import javax.swing.JTextArea;
@@ -36,6 +38,12 @@ import javax.swing.JProgressBar;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import javax.swing.JLabel;
 
 public class Repo_manager extends JFrame {
@@ -227,6 +235,35 @@ public class Repo_manager extends JFrame {
 		contentPane.add(btnCommit);
 		
 		JButton btnPush = new JButton("Push");
+		btnPush.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//初始化一些变量
+				String proname = repo.getDirectory().toString().split("\\\\")[repo.getDirectory().toString().split("\\\\").length-2];
+				Vector<String> branches = new Vector<String>();
+				
+				Git git = new Git(repo);
+				List<Ref> call;
+				Connection connect;
+					try {
+						call = git.branchList().call();
+						for(Ref ref:call) {
+							branches.add(ref.getName().split("/")[ref.getName().split("/").length-1]);
+						}
+					} catch (GitAPIException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+					//展示Push窗口
+					Push window = new Push();
+					window.SetCloseWindow(window);
+					window.SetFromBranch(branches);
+					window.SetProname(proname);
+					window.SetRepo(repo);
+					window.setVisible(true);
+			}
+		});
 		btnPush.setBounds(10, 77, 93, 23);
 		contentPane.add(btnPush);
 		
@@ -241,6 +278,18 @@ public class Repo_manager extends JFrame {
 		JLabel lblCommitMessage = new JLabel("Commit Message");
 		lblCommitMessage.setBounds(427, 448, 433, 15);
 		contentPane.add(lblCommitMessage);
+		
+		JButton btnNewButton = new JButton("分支");
+		btnNewButton.setBounds(10, 99, 93, 23);
+		contentPane.add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("删除分支");
+		btnNewButton_1.setBounds(10, 132, 93, 23);
+		contentPane.add(btnNewButton_1);
+		
+		JButton btnNewButton_2 = new JButton("Fetch");
+		btnNewButton_2.setBounds(10, 165, 93, 23);
+		contentPane.add(btnNewButton_2);
 				
 	}
 }
