@@ -35,9 +35,7 @@ public class demo3 {
 			                .setMustExist(true)
 			                .build();
 			Git git = new Git(repository);
-//			System.out.println(repository.getFullBranch());
-			git.checkout().setCreateBranch(false).setName("dev").call();
-			git.push().setRemote("root@39.97.255.250:/root/demo").call();
+			git.checkout().setName("haha").setCreateBranch(false).call();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

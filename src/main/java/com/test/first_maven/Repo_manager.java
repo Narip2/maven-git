@@ -54,6 +54,7 @@ public class Repo_manager extends JFrame {
 	private JList list;
 	private JList list_1;
 	private JTextArea textArea;
+	private String proname;
 
 	/**
 	 * Launch the application.
@@ -131,6 +132,12 @@ public class Repo_manager extends JFrame {
 	 * Create the frame.
 	 */
 	public Repo_manager() {
+		
+		//初始化一些变量
+		//获取项目名称
+		proname = repo.getDirectory().toString().split("\\\\")[repo.getDirectory().toString().split("\\\\").length-2];
+
+			
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//控制软件大小，使得填充满整个屏幕
 		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -238,10 +245,8 @@ public class Repo_manager extends JFrame {
 		btnPush.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//初始化一些变量
-				String proname = repo.getDirectory().toString().split("\\\\")[repo.getDirectory().toString().split("\\\\").length-2];
+				//获取其中的分支
 				Vector<String> branches = new Vector<String>();
-				
 				Git git = new Git(repo);
 				List<Ref> call;
 				Connection connect;
@@ -280,16 +285,50 @@ public class Repo_manager extends JFrame {
 		contentPane.add(lblCommitMessage);
 		
 		JButton btnNewButton = new JButton("分支");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//界面跳转
+				Branch_Create window = new Branch_Create();
+				window.SetCloseWindow(window);
+				window.SetRepoName(repo);
+				window.setVisible(true);
+			}
+		});
 		btnNewButton.setBounds(10, 99, 93, 23);
 		contentPane.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("删除分支");
-		btnNewButton_1.setBounds(10, 132, 93, 23);
+		btnNewButton_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//弹出新窗口
+				Branch_Delete window = new Branch_Delete();
+				window.SetRepository(repo);
+				window.Init();
+				window.setVisible(true);
+			}
+		});
+		btnNewButton_1.setBounds(10, 120, 93, 23);
 		contentPane.add(btnNewButton_1);
 		
 		JButton btnNewButton_2 = new JButton("Fetch");
-		btnNewButton_2.setBounds(10, 165, 93, 23);
+		btnNewButton_2.setBounds(10, 166, 93, 23);
 		contentPane.add(btnNewButton_2);
+		
+		JButton btnNewButton_3 = new JButton("切换分支");
+		btnNewButton_3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Branch_CheckOut window = new Branch_CheckOut();
+				window.SetCloseWindow(window);
+				window.SetRepository(repo);
+				window.Init();
+				window.setVisible(true);
+			}
+		});
+		btnNewButton_3.setBounds(10, 143, 93, 23);
+		contentPane.add(btnNewButton_3);
 				
 	}
 }
