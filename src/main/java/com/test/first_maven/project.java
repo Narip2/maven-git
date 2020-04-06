@@ -195,6 +195,10 @@ public class project extends JFrame {
 		});
 		button.setBounds(438, 69, 93, 23);
 		contentPane.add(button);
+		
+		JButton btnNewButton = new JButton("项目进度");
+		btnNewButton.setBounds(566, 69, 93, 23);
+		contentPane.add(btnNewButton);
 		if(username.equals(project_user)) {
 		//用于添加一些项目合作人可以不用通过pull request， 而可以直接上传代码之类的
 			JButton button_1 = new JButton("授权");

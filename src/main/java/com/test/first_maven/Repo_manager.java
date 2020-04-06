@@ -305,7 +305,6 @@ public class Repo_manager extends JFrame {
 				//弹出新窗口
 				Branch_Delete window = new Branch_Delete();
 				window.SetRepository(repo);
-				window.Init();
 				window.setVisible(true);
 			}
 		});
@@ -313,6 +312,16 @@ public class Repo_manager extends JFrame {
 		contentPane.add(btnNewButton_1);
 		
 		JButton btnNewButton_2 = new JButton("Fetch");
+		btnNewButton_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//窗口跳转
+				Fetch window = new Fetch();
+				window.SetRepository(repo);
+				window.SetCloseWindow(window);
+				window.setVisible(true);
+			}
+		});
 		btnNewButton_2.setBounds(10, 166, 93, 23);
 		contentPane.add(btnNewButton_2);
 		
@@ -329,6 +338,10 @@ public class Repo_manager extends JFrame {
 		});
 		btnNewButton_3.setBounds(10, 143, 93, 23);
 		contentPane.add(btnNewButton_3);
+		
+		JButton btnNewButton_4 = new JButton("合并分支");
+		btnNewButton_4.setBounds(10, 190, 93, 23);
+		contentPane.add(btnNewButton_4);
 				
 	}
 }

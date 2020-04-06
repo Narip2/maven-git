@@ -29,13 +29,13 @@ public class demo3 {
 			      session.setPassword( "a1b2c3d4E5" );
 			    }
 			} );
-			Repository repository = repositoryBuilder.setGitDir(new File("D:\\Git\\demo\\.git"))
+			Repository repository = repositoryBuilder.setGitDir(new File("D:\\Git\\narip\\demo\\.git"))
 			                .readEnvironment() // scan environment GIT_* variables
 			                .findGitDir() // scan up the file system tree
 			                .setMustExist(true)
 			                .build();
 			Git git = new Git(repository);
-			git.checkout().setName("haha").setCreateBranch(false).call();
+			git.fetch().setRefSpecs("\"refs/heads/*:refs/heads/*\"").call();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
