@@ -34,6 +34,7 @@ public class Merge extends JFrame {
 	private Repository repo;
 	private int flag = 0;
 	private Vector<String> branch = new Vector<String>();
+	private List<Ref> refs;
 	
 	private JLabel lblNewLabel;
 	private JComboBox comboBox;
@@ -109,10 +110,9 @@ public class Merge extends JFrame {
 					//获取所有分支
 					Git git = new Git(repo);
 					String temp;
-					List<Ref> call;
 						try {
-							call = git.branchList().call();
-							for(Ref ref:call) {
+							refs = git.branchList().call();
+							for(Ref ref:refs) {
 								temp = ref.getName().split("/")[ref.getName().split("/").length-1];
 								if(temp.equals(repo.getBranch())) {
 									//已在该分支 不添加到branch vector中
@@ -141,12 +141,17 @@ public class Merge extends JFrame {
 		comboBox_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				Git git = new Git(repo);
 				if(flag == 0) {
 					//origin 分支
-					//先fetch再merge
+					//先fetch比较不同
+					SSH ssh = new SSH();
+					ssh.exec("");
 				}else {
 					//local 分支
-					//直接merge
+					//直接比较不同
+//					git.diff().setSourcePrefix(sourcePrefix)
+					
 				}
 			}
 		});
@@ -154,6 +159,26 @@ public class Merge extends JFrame {
 		contentPane.add(comboBox_1);
 		
 		JButton btnNewButton = new JButton("确定");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Git git = new Git(repo);
+				if(flag == 0) {
+					//origin 分支
+				}else {
+					//local 分支
+					try {
+						git.merge().include(refs.get(comboBox_1.getSelectedIndex())).call();
+					} catch (GitAPIException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
+				//关闭窗口
+				close_window.dispose();
+			}
+		});
 		btnNewButton.setBounds(690, 177, 93, 23);
 		contentPane.add(btnNewButton);
 	}

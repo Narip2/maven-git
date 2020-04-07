@@ -2,15 +2,28 @@ package Demo;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.MergeCommand;
+import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.TransportException;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.JschConfigSessionFactory;
 import org.eclipse.jgit.transport.SshSessionFactory;
+import org.eclipse.jgit.treewalk.AbstractTreeIterator;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.transport.OpenSshConfig.Host;
 
 import com.jcraft.jsch.Session;
@@ -35,7 +48,23 @@ public class demo3 {
 			                .setMustExist(true)
 			                .build();
 			Git git = new Git(repository);
-			git.fetch().setRefSpecs("\"refs/heads/*:refs/heads/*\"").call();
+			List<Ref> refs = git.branchList().call();
+			for(Ref ref:refs) {
+				System.out.println(ref);
+			}
+			git.merge().include(refs.get(0)).call();
+//			AbstractTreeIterator oldtree = prepareTreeParser(repository,"5724adae27f4c276e7d8fd7f96689aad22ea5a40");
+//			AbstractTreeIterator newtree = prepareTreeParser(repository,"f682bb124152fad8d82610a2c7de467827c8109b");
+//			List<DiffEntry> res = git.diff().setSourcePrefix("refs/heads/master").setDestinationPrefix("refs/heads/dev").call();
+//			List<DiffEntry> res = git.diff().setOldTree(oldtree).setNewTree(newtree).call();
+			
+//			for(DiffEntry d:res) {
+//				System.out.println(d);
+//				 try (DiffFormatter formatter = new DiffFormatter(System.out)) {
+//                     formatter.setRepository(repository);
+//                     formatter.format(d);
+//                     }
+//			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -50,4 +79,22 @@ public class demo3 {
 			e.printStackTrace();
 		}
 	}
+	
+	 private static AbstractTreeIterator prepareTreeParser(Repository repository, String objectId) throws IOException {
+	        // from the commit we can build the tree which allows us to construct the TreeParser
+	        //noinspection Duplicates
+	        try (RevWalk walk = new RevWalk(repository)) {
+	            RevCommit commit = walk.parseCommit(ObjectId.fromString(objectId));
+	            RevTree tree = walk.parseTree(commit.getTree().getId());
+
+	            CanonicalTreeParser treeParser = new CanonicalTreeParser();
+	            try (ObjectReader reader = repository.newObjectReader()) {
+	                treeParser.reset(reader, tree.getId());
+	            }
+
+	            walk.dispose();
+
+	            return treeParser;
+	        }
+	    }
 }
