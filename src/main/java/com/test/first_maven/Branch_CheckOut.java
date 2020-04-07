@@ -52,7 +52,6 @@ public class Branch_CheckOut extends JFrame {
 		}
 		//获取所有分支
 		List<Ref> call;
-		Connection connect;
 			try {
 				call = git.branchList().call();
 				for(Ref ref:call) {

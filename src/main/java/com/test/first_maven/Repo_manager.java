@@ -340,6 +340,17 @@ public class Repo_manager extends JFrame {
 		contentPane.add(btnNewButton_3);
 		
 		JButton btnNewButton_4 = new JButton("合并分支");
+		btnNewButton_4.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Merge window = new Merge();
+				window.SetCloseWindow(window);
+				window.SetRepository(repo);
+				
+				window.Init();
+				window.setVisible(true);
+			}
+		});
 		btnNewButton_4.setBounds(10, 190, 93, 23);
 		contentPane.add(btnNewButton_4);
 				
