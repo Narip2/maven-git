@@ -14,6 +14,8 @@ import javax.swing.border.EmptyBorder;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 
@@ -96,6 +98,7 @@ public class Merge extends JFrame {
 				
 				//先清理branch 以免多次重复操作使得其中有很多累计变量
 				branch.clear();
+				refs.clear();
 				
 				flag = comboBox.getSelectedIndex();
 				if(flag == 0) {
@@ -138,21 +141,30 @@ public class Merge extends JFrame {
 		contentPane.add(comboBox);
 		
 		comboBox_1 = new JComboBox();
-		comboBox_1.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
+		comboBox_1.addPopupMenuListener(new PopupMenuListener() {
+			public void popupMenuCanceled(PopupMenuEvent e) {
+			}
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
 				Git git = new Git(repo);
 				if(flag == 0) {
 					//origin 分支
 					//先fetch比较不同
-					SSH ssh = new SSH();
-					ssh.exec("");
+					try {
+						git.fetch().setRefSpecs("refs/heads/"+branch.get(comboBox_1.getSelectedIndex())).call();
+						System.out.println("此处代码暂缺");
+					} catch (GitAPIException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}else {
+					System.out.println("此处代码暂缺");
 					//local 分支
 					//直接比较不同
 //					git.diff().setSourcePrefix(sourcePrefix)
 					
 				}
+			}
+			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
 			}
 		});
 		comboBox_1.setBounds(558, 177, 99, 23);
@@ -165,6 +177,19 @@ public class Merge extends JFrame {
 				Git git = new Git(repo);
 				if(flag == 0) {
 					//origin 分支
+					//远程分支的merge其实就是Pull
+					try {
+						git.pull().setRemote("origin").setRemoteBranchName(branch.get(comboBox_1.getSelectedIndex())).call();
+					} catch (InvalidRemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (TransportException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (GitAPIException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}else {
 					//local 分支
 					try {

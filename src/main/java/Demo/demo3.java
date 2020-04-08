@@ -48,16 +48,20 @@ public class demo3 {
 			                .setMustExist(true)
 			                .build();
 			Git git = new Git(repository);
-			List<Ref> refs = git.branchList().call();
-			for(Ref ref:refs) {
-				System.out.println(ref);
-			}
-			git.merge().include(refs.get(0)).call();
+			
+			//git merge操作
+//			List<Ref> refs = git.branchList().call();
+//			for(Ref ref:refs) {
+//				System.out.println(ref);
+//			}
+//			git.merge().include(refs.get(0)).call();
+			
+			
+			//git diff操作
 //			AbstractTreeIterator oldtree = prepareTreeParser(repository,"5724adae27f4c276e7d8fd7f96689aad22ea5a40");
 //			AbstractTreeIterator newtree = prepareTreeParser(repository,"f682bb124152fad8d82610a2c7de467827c8109b");
 //			List<DiffEntry> res = git.diff().setSourcePrefix("refs/heads/master").setDestinationPrefix("refs/heads/dev").call();
 //			List<DiffEntry> res = git.diff().setOldTree(oldtree).setNewTree(newtree).call();
-			
 //			for(DiffEntry d:res) {
 //				System.out.println(d);
 //				 try (DiffFormatter formatter = new DiffFormatter(System.out)) {
@@ -65,6 +69,14 @@ public class demo3 {
 //                     formatter.format(d);
 //                     }
 //			}
+			
+			//git 获取refs name操作  diff操作需要用到
+//			List<Ref> refs = git.branchList().call();
+//			for(Ref ref:refs) {
+//				System.out.println(ref.getObjectId().getName());
+//			}
+			
+			git.pull().setRemote("origin").setRemoteBranchName("dev").call();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
