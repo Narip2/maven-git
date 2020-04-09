@@ -201,11 +201,10 @@ public class project extends JFrame {
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Process window = new Process();
+				Process window = new Process(project_user,project_name);
 				window.SetCloseWindow(window);
 				SaveState();
 				close_window.dispose();
-				
 				window.setVisible(true);
 			}
 		});
