@@ -56,27 +56,13 @@ public class Repo_manager extends JFrame {
 	private JTextArea textArea;
 	private String proname;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Repo_manager frame = new Repo_manager();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
 	public void SetCloseWindow(Repo_manager window) {
 		close_window = window;
 	}
 	public void SetRepository(Repository repository) {
 		repo = repository;
+		//获取项目名称
+		proname = repo.getDirectory().toString().split("\\\\")[repo.getDirectory().toString().split("\\\\").length-2];
 	}
 	
 	public void RefreshLocal(JList jlist) {
@@ -132,12 +118,6 @@ public class Repo_manager extends JFrame {
 	 * Create the frame.
 	 */
 	public Repo_manager() {
-		
-		//初始化一些变量
-		//获取项目名称
-		proname = repo.getDirectory().toString().split("\\\\")[repo.getDirectory().toString().split("\\\\").length-2];
-
-			
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//控制软件大小，使得填充满整个屏幕
 		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -353,6 +333,20 @@ public class Repo_manager extends JFrame {
 		});
 		btnNewButton_4.setBounds(10, 190, 93, 23);
 		contentPane.add(btnNewButton_4);
+		
+		JButton btnNewButton_5 = new JButton("历史版本");
+		btnNewButton_5.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Log window = new Log(login.username,proname,repo);
+				window.SetCloseWindow(window);
+				
+				close_window.dispose();
+				window.setVisible(true);
+			}
+		});
+		btnNewButton_5.setBounds(10, 213, 93, 23);
+		contentPane.add(btnNewButton_5);
 				
 	}
 }
