@@ -64,16 +64,15 @@ public class Create_PR extends JFrame {
 		lblNewLabel_1.setText(to_user+"/"+repo_name+"/");
 		lblNewLabel.setText(from_user+"/"+repo_name+"/");
 		comboBox.setModel(new DefaultComboBoxModel(from));
-		comboBox_1.setModel(new DefaultComboBoxModel(to));
+		comboBox_1.setModel(new DefaultComboBoxModel(from));
+		ShowDiff();
 		
 	}
 	public void SetFromBranch(Vector<String> f_v) {
 		from = f_v;
-		System.out.println(f_v);
 	}
 	public void SetToBranch(Vector<String> t_v) {
 		to = t_v;
-		System.out.println(t_v);
 	}
 	public void ShowDiff() {
 		SSH ssh = new SSH();
@@ -160,26 +159,25 @@ public class Create_PR extends JFrame {
 					connect = DriverManager.getConnection(  
 					          "jdbc:mysql://localhost:3306/work_together?serverTimezone=UTC","root","123456");
 					Statement stmt = connect.createStatement();
-					ResultSet rs = stmt.executeQuery("select * from repo where username = \'"+from_user+"\' and repo_name = "+repo_name);
+					ResultSet rs = stmt.executeQuery("select * from repo where username = \'"+from_user+"\' and repo_name = \'"+repo_name+"\'");
+					//由于rs必须.next()一下才能继续，所以干脆在这里加了一个if判断
 					if(rs.next()) {
 						if(rs.getInt("auth") == 1) {
 							//有权限，直接push
 							SSH ssh = new SSH();
 							ssh.exec("cd /"+from_user+"/"+repo_name
 									+" &&git push root@39.97.255.250:/root/"+to_user+"/"+repo_name+" "+from_branch+":"+to_branch);
-							
 						}else {
 							//没有权限，执行正常pull request操作
 							//flag 位0表示未回应，1表示同意，-1表示拒绝
-							stmt.executeUpdate("insert into pull_request values(\'"+from_user+"\',\'"+from_branch+"\',\'"+repo_name+"\',\'"+to_user+"\',\'"+to_branch+"\'，0)");
-							
-							//和返回按钮执行一样的功能
-							project window =  new project();
-							window.SetCloseWindow(window);
-							window.LoadState();
-							close_window.dispose();
-							window.setVisible(true);
+							stmt.executeUpdate("insert into pull_request values(\'"+from_user+"\',\'"+from_branch+"\',\'"+repo_name+"\',\'"+to_user+"\',\'"+to_branch+"\',0)");
 						}
+						//和返回按钮执行一样的功能
+						project window =  new project();
+						window.SetCloseWindow(window);
+						window.LoadState();
+						close_window.dispose();
+						window.setVisible(true);
 					}
 
 				} catch (SQLException e1) {

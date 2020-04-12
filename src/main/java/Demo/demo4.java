@@ -1,98 +1,37 @@
 package Demo;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
-import javax.swing.DefaultCellEditor;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JButton;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
-public class demo4 extends JFrame {
-
-	private JPanel contentPane;
-	private JTable table;
-	private DefaultTableModel model;
-
-	/**
-	 * Launch the application.
-	 */
+public class demo4 {
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					demo4 frame = new demo4();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		FileRepositoryBuilder repositoryBuilder = new FileRepositoryBuilder();
+		try {
+			Repository repository = repositoryBuilder.setGitDir(new File("D:\\Git\\demo\\.git"))
+			        .readEnvironment() // scan environment GIT_* variables
+			        .findGitDir() // scan up the file system tree
+			        .setMustExist(true)
+			        .build();
+			Git git = new Git(repository);
+			List<Ref> refs;
+			refs = git.branchList().call();
+			for(Ref ref:refs) {
+				System.out.println(ref);
+				System.out.println(ref.getName().split("/")[ref.getName().split("/").length-1]);
 			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public demo4() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		
-		model = new DefaultTableModel();
-		model.setRowCount(0);
-		model.setColumnIdentifiers(new Object[] {"","编号","姓名"});
-		table = new JTable(model);
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int columnIndex = table.columnAtPoint(e.getPoint());
-				int rowIndex = table.rowAtPoint(e.getPoint());
-				//第0列时才执行
-				if(columnIndex == 0) {
-					//如果是checkbox列
-					if((boolean)model.getValueAt(rowIndex, 0) == false) {
-						System.out.println(rowIndex+"false");
-					}else {
-						System.out.println(rowIndex+"true");
-					}
-				}else {
-				}
-			}
-		});
-		
-		TableColumn tc = table.getColumnModel().getColumn(0);
-		tc.setCellEditor(table.getDefaultEditor(Boolean.class));
-		tc.setCellRenderer(table.getDefaultRenderer(Boolean.class));
-		for(int i = 0; i < 3; i++) {
-			//false未勾选 true表示勾选
-			model.addRow(new Object[] {new Boolean(false),"编号"+i,"姓名"+i});
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (GitAPIException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		table.setBounds(74, 50, 249, 145);
-		contentPane.add(table);
-		
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				model.addRow(new Object[] {new Boolean(false),"编号"+3,"姓名"+3});
-			}
-		});
-		btnNewButton.setBounds(141, 228, 93, 23);
-		contentPane.add(btnNewButton);
 	}
 }
-
-

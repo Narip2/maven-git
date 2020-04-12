@@ -35,22 +35,6 @@ public class download_path extends JFrame {
 	private String download_user;
 	
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					download_path frame = new download_path();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
 	 */
 	
@@ -115,7 +99,7 @@ public class download_path extends JFrame {
 					    }
 					} );
 					Git git = Git.cloneRepository().setURI("root@39.97.255.250:/root/"+download_user+"/"+download_project)
-							.setDirectory(new File(textField.getText()))
+							.setDirectory(new File(textField.getText()+"/"+download_project))
 							.call();
 				} catch (InvalidRemoteException e1) {
 					// TODO Auto-generated catch block

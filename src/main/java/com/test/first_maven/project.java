@@ -164,7 +164,6 @@ public class project extends JFrame {
 						window.SetFromBranch(ssh.GetBranch(project_user, project_name));
 						window.SetToBranch(ssh.GetBranch(fk_from, project_name));
 						
-						
 						window.Init();
 						close_window.dispose();
 						window.setVisible(true);		
@@ -215,6 +214,19 @@ public class project extends JFrame {
 		progressBar.setBounds(546, 127, 146, 14);
 		
 		contentPane.add(progressBar);
+		
+		JButton btnNewButton_1 = new JButton("返回");
+		btnNewButton_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				  after_login window = new after_login();
+	    		  after_login.afterlogin_frame = window;
+	    		  close_window.dispose();
+	    		  window.setVisible(true);
+			}
+		});
+		btnNewButton_1.setBounds(10, 10, 93, 23);
+		contentPane.add(btnNewButton_1);
 		if(username.equals(project_user)) {
 		//用于添加一些项目合作人可以不用通过pull request， 而可以直接上传代码之类的
 			JButton button_1 = new JButton("授权");

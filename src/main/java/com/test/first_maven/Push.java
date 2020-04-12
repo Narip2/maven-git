@@ -39,6 +39,7 @@ public class Push extends JFrame {
 	private String repo_name;
 	
 	private JComboBox comboBox;
+	private JComboBox comboBox_1;
 	
 	
 	public void SetCloseWindow(Push window) {
@@ -60,6 +61,11 @@ public class Push extends JFrame {
 	//初始化一些需要数据的窗口
 	public void Init() {
 		comboBox.setModel(new DefaultComboBoxModel(from));
+		//默认第一个
+		from_branch = from.get(0);
+		SSH ssh = new SSH();
+		to = ssh.GetBranch(login.username, repo_name);
+		comboBox_1.setModel(new DefaultComboBoxModel(to));
 	}
 
 	/**
@@ -87,7 +93,7 @@ public class Push extends JFrame {
 		comboBox.setBounds(70, 88, 69, 23);
 		contentPane.add(comboBox);
 		
-		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1 = new JComboBox();
 		comboBox_1.setBounds(286, 88, 69, 23);
 		contentPane.add(comboBox_1);
 		
@@ -110,6 +116,7 @@ public class Push extends JFrame {
 					//先切换分支
 					git.checkout().setCreateBranch(false).setName(from_branch).call();
 					//将当前分支push上去
+					//其实push只能是push当前分支到同样的分支上去，不能Push到另外不同的分支上面去
 					git.push().setRemote("root@39.97.255.250:/root/"+login.username+"/"+repo_name).call();
 				} catch (InvalidRemoteException e1) {
 					// TODO Auto-generated catch block
@@ -121,6 +128,7 @@ public class Push extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				close_window.dispose();
 			}
 		});
 		btnNewButton.setBounds(155, 191, 93, 23);

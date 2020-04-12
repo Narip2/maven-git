@@ -27,21 +27,6 @@ public class Authorization extends JFrame {
 	private String project_user;
 	Connection connect;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Authorization frame = new Authorization();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	
 	public void SetProjectName(String proname) {
 		project_name = proname;
@@ -96,17 +81,23 @@ public class Authorization extends JFrame {
 					if(rs.next()) {
 						//存在此人
 						//查询此人是否有同名项目
-						rs = stmt.executeQuery("select * from repo where username = \'"+textField.getText()+"\' and repo_name = \'"+project_name+"\'");
+						rs = stmt.executeQuery("select * from repo where username = \'"+textField.getText()+"\' and repo_name = \'"+project_name+"\' and fork_from != \'"+login.username+"\'");
 						if(rs.next()) {
 							Error window = new Error("此人已经有同名项目!");
 							window.SetCloseWindow(window);
 							window.setVisible(true);
 						}else {
-							//没有同名项目 准备更新数据库 将auth设置为2，插入repo中 表明实际没有fork，等待fork
-							stmt.executeUpdate("insert into repo values(\'"+textField.getText()+"\',\'"+project_name+"\',\'"+project_user+"\',2)");
-							//关闭授权窗口
-							close_window.dispose();
+							rs = stmt.executeQuery("select * from repo where username = \'"+textField.getText()+"\' and repo_name = \'"+project_name+"\'");
+							if(rs.next()) {
+								//项目是从这个人这里fork过去的
+								stmt.executeUpdate("update repo set auth = 2 where username = \'"+textField.getText()+"\' and repo_name = \'"+project_name+"\'");
+							}else {
+								//没有同名项目 准备更新数据库 将auth设置为2，插入repo中 表明实际没有fork，等待fork
+								stmt.executeUpdate("insert into repo values(\'"+textField.getText()+"\',\'"+project_name+"\',\'"+project_user+"\',2)");
+								//关闭授权窗口
+							}
 						}
+						close_window.dispose();
 					}else {
 						//不存在此人
 						Error window = new Error("不存在此人，请重新输入!");

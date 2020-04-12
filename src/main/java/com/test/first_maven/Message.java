@@ -13,6 +13,8 @@ import javax.swing.JList;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -24,7 +26,7 @@ import javax.swing.JTable;
 
 public class Message extends JFrame {
 	private JPanel contentPane;
-	private Message Close_Window;
+	private Message close_window;
 	private JList list;
 	private Connection connect = null;
 	private Statement stmt;
@@ -48,7 +50,7 @@ public class Message extends JFrame {
 
 	
 	public void SetCloseWindow(Message window) {
-		Close_Window = window;
+		close_window = window;
 	}
 	
 	
@@ -130,7 +132,7 @@ public class Message extends JFrame {
 				//窗口跳转
 				after_login window = new after_login();
 				window.afterlogin_frame = window;
-				Close_Window.dispose();
+				close_window.dispose();
 				window.setVisible(true);
 			}
 		});
@@ -152,50 +154,81 @@ public class Message extends JFrame {
 				if(str.contains("邀")) {
 					//如果同意需要直接fork到用户仓库 默认执行的fork(clone)操作
 					//打开choose窗口进行选择
-					Choose cs = new Choose("请选择是否接受这个邀请","拒绝","接受");
+					final Choose cs = new Choose("请选择是否接受这个邀请","拒绝","接受");
+					cs.SetCloseWindow(cs);
 					cs.setVisible(true);
-					String username = str.substring(0,str.indexOf("邀"));
-					String proname = str.substring(str.indexOf("合作")+2,str.indexOf("项目"));
-					//2表示是 接受1表示拒绝
-					if(cs.GetBtnChoice() == 2) {
-						//执行SSH的fork(clone)操作
-						SSH ssh = new SSH();
-						ssh.exec("git clone --bare root@39.97.255.250:/root/"+username+"/"+proname+" /root/"+login_user+"/"+proname);
-						//执行数据库的修改操作
-						try {
-							stmt.executeUpdate("update repo set auth = 1 where auth = 2 and fork_from = \'"+username+"\' and repo_name = \'"+proname+"\'");
-						} catch (SQLException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
+					final String username = str.substring(0,str.indexOf("邀"));
+					final String proname = str.substring(str.indexOf("合作")+2,str.indexOf("项目"));
+					cs.addWindowListener(new WindowListener() {
+						@Override
+						public void windowOpened(WindowEvent e) {
+							// TODO Auto-generated method stub
 						}
-						//刷新JList
-						RefreshList(list);
-					}else {
-						//修改数据库中的auth为-4表示拒绝
-						//执行数据库修改操作
-						try {
-							stmt.executeUpdate("update repo set auth = -4 where auth = 2 and fork_from = \'"+username+"\' and repo_name = \'"+proname+"\'");
-						} catch (SQLException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
+						@Override
+						public void windowClosing(WindowEvent e) {
+							// TODO Auto-generated method stub
 						}
-						//更新list
-						RefreshList(list);
-					}
+						@Override
+						public void windowClosed(WindowEvent e) {
+							// TODO Auto-generated method stub
+							//2表示是 接受1表示拒绝
+							if(cs.GetBtnChoice() == 2) {
+								//执行SSH的fork(clone)操作
+								SSH ssh = new SSH();
+								ssh.exec("git clone --bare root@39.97.255.250:/root/"+username+"/"+proname+" /root/"+login_user+"/"+proname);
+								//执行数据库的修改操作
+								try {
+									stmt.executeUpdate("update repo set auth = 1 where auth = 2 and fork_from = \'"+username+"\' and repo_name = \'"+proname+"\'");
+								} catch (SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								//刷新JList
+								RefreshList(list);
+							}else {
+								//修改数据库中的auth为-4表示拒绝
+								//执行数据库修改操作
+								try {
+									stmt.executeUpdate("update repo set auth = -4 where auth = 2 and fork_from = \'"+username+"\' and repo_name = \'"+proname+"\'");
+								} catch (SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								//更新list
+								RefreshList(list);
+							}
+						}
+						@Override
+						public void windowIconified(WindowEvent e) {
+							// TODO Auto-generated method stub
+						}
+						@Override
+						public void windowDeiconified(WindowEvent e) {
+							// TODO Auto-generated method stub
+						}
+						@Override
+						public void windowActivated(WindowEvent e) {
+							// TODO Auto-generated method stub
+						}
+						@Override
+						public void windowDeactivated(WindowEvent e) {
+							// TODO Auto-generated method stub
+						}
+					});
 				}//发起pull request
 				else if(str.contains("针")) {
 					//跳转到Pull_request窗口，查看pull requst的不同
 					//注意修改构造函数，好跳转之后不用刷新直接显示内容
 					Pull_request window = new Pull_request();
 					window.SetCloseWindow(window);
-					window.FreshList();
-					Close_Window.dispose();
 					//设置一些需要传递的变量
 //					msg.add(rs.getString("from_user")+"针对你的"+rs.getString("repo_name")+"项目,"+"从他的"+rs.getString("from_branch")+"远程分支到你的"+rs.getString("to_branch")+"分支发起了pull request，点击查看详情");
 					window.SetFromUser(str.substring(0,str.indexOf("针对")));
 					window.SetFromBranch(str.substring(str.indexOf("他的")+2,str.indexOf("远程")));
 					window.SetRepoName(str.substring(str.indexOf("你的")+2,str.indexOf("项目")));
 					window.SetToBranch(str.substring(str.indexOf("到你的")+3,str.indexOf("分支发")));
+					window.FreshList();
+					close_window.dispose();
 					window.setVisible(true);
 					
 					
@@ -237,7 +270,7 @@ public class Message extends JFrame {
 						//默认修改auth = 0. 因为既然用了pull request，就没有权限直接去
 //						stmt.executeUpdate("update repo set auth = 0 where auth = 5 and fork_from = \'"+username+"\' and repo_name = \'"+proname+"\'");
 						//修改pull_request表格
-						stmt.executeUpdate("delete from pull request where from_user = \'"+login.username+"\' and repo_name = \'"+proname+"\' and from_branch = \'"+branch+"\'");
+						stmt.executeUpdate("delete from pull_request where from_user = \'"+login.username+"\' and repo_name = \'"+proname+"\' and from_branch = \'"+branch+"\'");
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -250,7 +283,7 @@ public class Message extends JFrame {
 					String proname = str.substring(str.indexOf("你的")+2, str.indexOf("项目"));
 					String branch = str.substring(str.indexOf("项目")+2,str.indexOf("分支"));
 					try {
-						stmt.executeUpdate("delete from pull request where from_user = \'"+login.username+"\' and repo_name = \'"+proname+"\' and from_branch = \'"+branch+"\'");
+						stmt.executeUpdate("delete from pull_request where from_user = \'"+login.username+"\' and repo_name = \'"+proname+"\' and from_branch = \'"+branch+"\'");
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

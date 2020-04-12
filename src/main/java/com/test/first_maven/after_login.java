@@ -213,11 +213,27 @@ public class after_login extends JFrame {
 			//查询得到授权邀请信息条数
 			ResultSet rs = stmt.executeQuery("select * from repo where username = \'"+login.username+"\' and auth = 2");
 			rs.last();
-			auth_num = rs.getRow();
-			//查询得到收到的pull request条数
-			rs = stmt.executeQuery("select * from repo where fork_from = \'"+login.username+"\' and auth = 3");
+			auth_num += rs.getRow();
+			
+			//查询拒绝授权邀请的条数
+			rs = stmt.executeQuery("select * from repo where fork_from = \'"+login.username+"\' and auth = -4");
 			rs.last();
-			pull_num = rs.getRow();
+			auth_num += rs.getRow();
+			
+			//查询得到收到的pull request条数
+			rs = stmt.executeQuery("select * from pull_request where flag = 0 and to_user = \'"+login.username+"\'");
+			rs.last();
+			pull_num += rs.getRow();
+			
+			//查询同意pull request条数
+			rs = stmt.executeQuery("select * from pull_request where flag = 1 and from_user = \'"+login.username+"\'");
+			rs.last();
+			pull_num += rs.getRow();
+			
+			//查询拒绝pull request条数
+			rs = stmt.executeQuery("select * from pull_request where flag = -1 and from_user = \'"+login.username+"\'");
+			rs.last();
+			pull_num += rs.getRow();
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

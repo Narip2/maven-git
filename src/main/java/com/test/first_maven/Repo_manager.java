@@ -229,7 +229,6 @@ public class Repo_manager extends JFrame {
 				Vector<String> branches = new Vector<String>();
 				Git git = new Git(repo);
 				List<Ref> call;
-				Connection connect;
 					try {
 						call = git.branchList().call();
 						for(Ref ref:call) {
@@ -239,13 +238,13 @@ public class Repo_manager extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					
 					//展示Push窗口
 					Push window = new Push();
 					window.SetCloseWindow(window);
 					window.SetFromBranch(branches);
 					window.SetProname(proname);
 					window.SetRepo(repo);
+					window.Init();
 					window.setVisible(true);
 			}
 		});
@@ -347,6 +346,20 @@ public class Repo_manager extends JFrame {
 		});
 		btnNewButton_5.setBounds(10, 213, 93, 23);
 		contentPane.add(btnNewButton_5);
+		
+		JButton btnNewButton_6 = new JButton("返回");
+		btnNewButton_6.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//界面跳转
+	    		  after_login window = new after_login();
+	    		  after_login.afterlogin_frame = window;
+	    		  close_window.dispose();
+	    		  window.setVisible(true);
+			}
+		});
+		btnNewButton_6.setBounds(10, 404, 93, 23);
+		contentPane.add(btnNewButton_6);
 				
 	}
 }

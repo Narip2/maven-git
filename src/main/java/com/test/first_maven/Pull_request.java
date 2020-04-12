@@ -120,9 +120,11 @@ public class Pull_request extends JFrame {
 				//但是由于远程仓库都为裸仓库，所以需要在远程服务器上利用clone再push的方法实现merge
 				//git push <远程主机名> <本地分支>:<远程分支>        冒号以及后面的可以省略 默认到master
 				SSH ssh = new SSH();
-				ssh.exec("mkdir .init && cd .init &&git clone root@39.97.255.250:/root/"+from_user+"/"+repo_name
-						+" &&git push root@39.97.255.250:/root/"+to_user+"/"+repo_name+" "+from_branch+":"+to_branch
-						+" &&cd .. && rm -rf .init");
+				ssh.exec("cd /root/"+from_user+"/"+repo_name
+						+" &&git push origin "+from_branch+":"+to_branch);
+//				ssh.exec("mkdir .init && cd .init &&git clone root@39.97.255.250:/root/"+from_user+"/"+repo_name
+//						+" &&git push root@39.97.255.250:/root/"+to_user+"/"+repo_name+" "+from_branch+":"+to_branch
+//						+" &&cd .. && rm -rf .init");
 				//更新数据库
 				try {
 					Statement stmt = connect.createStatement();
