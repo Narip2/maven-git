@@ -14,23 +14,20 @@ public class demo4 {
 	public static void main(String[] args) {
 		FileRepositoryBuilder repositoryBuilder = new FileRepositoryBuilder();
 		try {
-			Repository repository = repositoryBuilder.setGitDir(new File("D:\\Git\\demo\\.git"))
+			Repository repository = repositoryBuilder.setGitDir(new File("D:\\Git\\narip\\demo\\.git"))
 			        .readEnvironment() // scan environment GIT_* variables
 			        .findGitDir() // scan up the file system tree
 			        .setMustExist(true)
 			        .build();
 			Git git = new Git(repository);
-			List<Ref> refs;
-			refs = git.branchList().call();
-			for(Ref ref:refs) {
-				System.out.println(ref);
-				System.out.println(ref.getName().split("/")[ref.getName().split("/").length-1]);
-			}
+			git.branchDelete().setBranchNames("dev").call();
+//			System.out.println(repository.getBranch());
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (GitAPIException e) {
-			// TODO Auto-generated catch block
+//			 TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

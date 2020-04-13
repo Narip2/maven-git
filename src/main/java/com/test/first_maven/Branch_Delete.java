@@ -25,6 +25,7 @@ import org.eclipse.jgit.lib.Repository;
 import javax.swing.event.PopupMenuEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.sql.Connection;
 
 public class Branch_Delete extends JFrame {
@@ -46,6 +47,16 @@ public class Branch_Delete extends JFrame {
 	}
 	public void SetRepository(Repository repository) {
 		repo = repository;
+	}
+	public void Init() {
+		//一开始默认显示origin的
+				//对origin 分支进行删除操作
+				//获取项目名称
+				repo_name = repo.getDirectory().toString().split("\\\\")[repo.getDirectory().toString().split("\\\\").length-2];
+				//在comboBox显示origin 分支
+				SSH ssh = new SSH();
+				branch = ssh.GetBranch(login.username, repo_name);
+				comboBox.setModel(new DefaultComboBoxModel(branch));
 	}
 	
 
@@ -79,28 +90,40 @@ public class Branch_Delete extends JFrame {
 					ssh.exec("cd /root/"+login.username+"/"+repo_name+" &&git branch -D "+branch.get(comboBox.getSelectedIndex()));
 				}else {
 					//local分支进行操作
-					Git git = new Git(repo);
+					//先判断当前分支是不是准备删除的分支，如果是，不能删除，需要先切换分支
 					try {
-						git.branchDelete().setBranchNames(branch.get(comboBox.getSelectedIndex())).call();
-					} catch (NotMergedException e1) {
+						if(repo.getBranch().equals(comboBox.getSelectedIndex())) {
+							//出错，提示需要先切换分支
+							Error window = new Error("删除分支为当前分支，请先切换分支!");
+							window.SetCloseWindow(window);
+							window.setVisible(true);
+						}else {
+							Git git = new Git(repo);
+							try {
+								git.branchDelete().setBranchNames(branch.get(comboBox.getSelectedIndex())).call();
+							} catch (NotMergedException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (CannotDeleteCurrentBranchException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (GitAPIException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+					} catch (IOException e2) {
 						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (CannotDeleteCurrentBranchException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (GitAPIException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						e2.printStackTrace();
 					}
 				}
-				
 				//关闭窗口
+				System.out.println("????");
 				close_window.dispose();
 			}
 		});
 		btnNewButton.setBounds(151, 174, 93, 23);
 		contentPane.add(btnNewButton);
-		
 		comboBox_1 = new JComboBox(new String[] {"origin","local"});
 		comboBox_1.addPopupMenuListener(new PopupMenuListener() {
 			public void popupMenuCanceled(PopupMenuEvent e) {

@@ -33,13 +33,11 @@ public class Push extends JFrame {
 	private JPanel contentPane;
 	private Push close_window;
 	private Vector<String> from;
-	private Vector<String> to;
 	private String from_branch;
 	private Repository repo;
 	private String repo_name;
 	
 	private JComboBox comboBox;
-	private JComboBox comboBox_1;
 	
 	
 	public void SetCloseWindow(Push window) {
@@ -47,9 +45,6 @@ public class Push extends JFrame {
 	}
 	public void SetFromBranch(Vector<String> f_b) {
 		from = f_b;
-	}
-	public void SetToBranch(Vector<String> t_b) {
-		to = t_b;
 	}
 	public void SetProname(String proname) {
 		repo_name = proname;
@@ -63,9 +58,6 @@ public class Push extends JFrame {
 		comboBox.setModel(new DefaultComboBoxModel(from));
 		//默认第一个
 		from_branch = from.get(0);
-		SSH ssh = new SSH();
-		to = ssh.GetBranch(login.username, repo_name);
-		comboBox_1.setModel(new DefaultComboBoxModel(to));
 	}
 
 	/**
@@ -90,15 +82,11 @@ public class Push extends JFrame {
 			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
 			}
 		});
-		comboBox.setBounds(70, 88, 69, 23);
+		comboBox.setBounds(149, 88, 99, 23);
 		contentPane.add(comboBox);
 		
-		comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(286, 88, 69, 23);
-		contentPane.add(comboBox_1);
-		
-		JLabel lblNewLabel = new JLabel("origin/");
-		lblNewLabel.setBounds(232, 92, 54, 15);
+		JLabel lblNewLabel = new JLabel("Push分支:");
+		lblNewLabel.setBounds(80, 92, 59, 15);
 		contentPane.add(lblNewLabel);
 		
 		JButton btnNewButton = new JButton("确定");

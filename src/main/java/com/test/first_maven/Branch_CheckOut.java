@@ -63,6 +63,8 @@ public class Branch_CheckOut extends JFrame {
 			}
 			//初始化comboBox
 			comboBox.setModel(new DefaultComboBoxModel(branches));
+			//初始化变量
+			Choose_Branch = branches.get(0);
 	}
 	public void SetRepository(Repository repository) {
 		repo = repository;
@@ -125,6 +127,7 @@ public class Branch_CheckOut extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				close_window.dispose();
 			}
 		});
 		btnNewButton.setBounds(291, 85, 93, 23);

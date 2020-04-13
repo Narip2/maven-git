@@ -263,7 +263,7 @@ public class Repo_manager extends JFrame {
 		lblCommitMessage.setBounds(427, 448, 433, 15);
 		contentPane.add(lblCommitMessage);
 		
-		JButton btnNewButton = new JButton("分支");
+		JButton btnNewButton = new JButton("创建分支");
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -283,7 +283,9 @@ public class Repo_manager extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				//弹出新窗口
 				Branch_Delete window = new Branch_Delete();
+				window.SetCloseWindow(window);
 				window.SetRepository(repo);
+				window.Init();
 				window.setVisible(true);
 			}
 		});

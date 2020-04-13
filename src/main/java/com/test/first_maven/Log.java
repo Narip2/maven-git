@@ -77,16 +77,16 @@ public class Log extends JFrame {
 		}
 		
 		scrollPane = new JScrollPane();
-		scrollPane.addMouseListener(new MouseAdapter() {
+		scrollPane.setBounds(138, 190, 620, 454);
+		contentPane.add(scrollPane);
+		
+		table = new JTable(model);
+		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				mevent = e;
 			}
 		});
-		scrollPane.setBounds(138, 190, 620, 454);
-		contentPane.add(scrollPane);
-		
-		table = new JTable(model);
 		scrollPane.setViewportView(table);
 		
 		JButton btnNewButton = new JButton("确认回到该版本");

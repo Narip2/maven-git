@@ -98,7 +98,9 @@ public class Merge extends JFrame {
 				
 				//先清理branch 以免多次重复操作使得其中有很多累计变量
 				branch.clear();
-				refs.clear();
+				if(refs != null) {
+					refs.clear();	
+				}
 				
 				flag = comboBox.getSelectedIndex();
 				if(flag == 0) {
@@ -107,7 +109,7 @@ public class Merge extends JFrame {
 					SSH ssh = new SSH();
 					String repo_name = repo.getDirectory().toString().split("\\\\")[repo.getDirectory().toString().split("\\\\").length-2];
 					branch = ssh.GetBranch(login.username, repo_name);
-					comboBox.setModel(new DefaultComboBoxModel(branch));
+					comboBox_1.setModel(new DefaultComboBoxModel(branch));
 				}else {
 					//显示local 分支
 					//获取所有分支
@@ -131,7 +133,7 @@ public class Merge extends JFrame {
 							e1.printStackTrace();
 						}
 						//初始化comboBox
-						comboBox.setModel(new DefaultComboBoxModel(branch));
+						comboBox_1.setModel(new DefaultComboBoxModel(branch));
 				}
 			}
 			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
