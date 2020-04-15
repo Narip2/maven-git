@@ -70,13 +70,16 @@ public class demo3 {
 //                     }
 //			}
 			
-			//git 获取refs name操作  diff操作需要用到
-//			List<Ref> refs = git.branchList().call();
-//			for(Ref ref:refs) {
-//				System.out.println(ref.getObjectId().getName());
-//			}
+//			git 获取refs name操作  diff操作需要用到
+			List<Ref> refs = git.branchList().call();
+			System.out.println(repository.getIndexFile());
+			for(Ref ref:refs) {
+				System.out.println(ref.getName());
+//				System.out.println(ref.getUpdateIndex());
+				System.out.println(ref.getObjectId().getName());
+			}
 			
-			git.pull().setRemote("origin").setRemoteBranchName("dev").call();
+//			git.pull().setRemote("origin").setRemoteBranchName("dev").call();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

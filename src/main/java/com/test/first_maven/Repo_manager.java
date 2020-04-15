@@ -55,6 +55,8 @@ public class Repo_manager extends JFrame {
 	private JList list_1;
 	private JTextArea textArea;
 	private String proname;
+	private Vector<String> vec_local;
+	private Vector<String> vec_cache;
 
 	public void SetCloseWindow(Repo_manager window) {
 		close_window = window;
@@ -80,6 +82,7 @@ public class Repo_manager extends JFrame {
 				vector.add(set);
 			}
 			jlist.setListData(vector);
+			vec_local = vector;
 			//getMissing getModified
 		} catch (NoWorkTreeException e) {
 			// TODO Auto-generated catch block
@@ -104,6 +107,7 @@ public class Repo_manager extends JFrame {
 			for(String set:status.getAdded()) {
 				vector.add(set);
 			}
+			vec_cache = vector;
 			jlist.setListData(vector);
 			//getMissing getModified
 		} catch (NoWorkTreeException e) {
@@ -131,6 +135,12 @@ public class Repo_manager extends JFrame {
 		contentPane.setLayout(null);
 		
 		list = new JList();
+		list.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Git git = new Git(repo);
+			}
+		});
 		list.setBounds(115, 36, 286, 321);
 		contentPane.add(list);
 		
@@ -140,7 +150,7 @@ public class Repo_manager extends JFrame {
 		
 		JTextPane textPane = new JTextPane();
 		textPane.setEditable(false);
-		textPane.setBounds(419, 10, 894, 347);
+		textPane.setBounds(419, 36, 894, 321);
 		contentPane.add(textPane);
 		
 		textArea = new JTextArea();
