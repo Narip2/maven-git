@@ -125,6 +125,12 @@ public class after_login extends JFrame {
 		textField.setColumns(10);
 		
 		JButton button = new JButton("搜索");
+		button.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+		});
 		button.setBounds(931, 22, 93, 23);
 		contentPane.add(button);
 		
