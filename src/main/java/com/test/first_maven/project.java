@@ -42,22 +42,6 @@ public class project extends JFrame {
 	public static String project_user;
 	private static project close_window;
 	private Connection connect;
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					project frame = new project();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	
 	public void SetCloseWindow(project window) {

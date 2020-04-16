@@ -128,7 +128,10 @@ public class after_login extends JFrame {
 		button.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+				Search window = new Search(textField.getText());
+				window.SetCloseWindow(window);
+				window.setVisible(true);
+				afterlogin_frame.dispose();
 			}
 		});
 		button.setBounds(931, 22, 93, 23);

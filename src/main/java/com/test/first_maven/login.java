@@ -48,7 +48,12 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.alee.laf.WebLookAndFeel;
+
 import javax.swing.JButton;
+import javax.swing.JDialog;
+
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -57,9 +62,15 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -80,10 +91,13 @@ public class login extends JFrame {
 	public static String temp_pro_user;
 	public String passwd;
 	static login login_frame;
+	
+	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		
 		//First connnect to database
 		try {  
 		      Class.forName("com.mysql.jdbc.Driver");     //加载MYSQL JDBC驱动程序     
@@ -99,6 +113,19 @@ public class login extends JFrame {
 		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
+//界面美化
+				WebLookAndFeel.install ();
+//		try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//            	System.out.println(info.getName());
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        }catch(Exception e) {
+//        	System.out.println(e);
+//        }
 				try {
 					login frame = new login();
 					login_frame = frame;
