@@ -28,23 +28,16 @@ public class demo4 {
 		 final SshSessionFactory sshSessionFactory = new JschConfigSessionFactory() {
 	            @Override
 	            protected void configure(OpenSshConfig.Host host, Session session) {
-	                session.setConfig("StrictHostKeyChecking", "no");
+//	                session.setConfig("StrictHostKeyChecking", "no");
 	            }
-
 	            @Override
-	            protected JSch createDefaultJSch(FS fs){
-	            	JSch jSch = null;
-	                try {
-	                	jSch = super.createDefaultJSch(fs);
-//	 	                jSch.addIdentity("C:\\Users\\50264\\.ssh\\id_rsa");
-	 	                jSch.addIdentity("D:\\id_rsa");
-//						jSch.setKnownHosts("C:\\Users\\50264\\.ssh\\known_hosts");
-					} catch (JSchException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-	                return jSch;
+	            protected JSch getJSch(final OpenSshConfig.Host hc, FS fs) throws JSchException {
+	                JSch jsch = super.getJSch(hc, fs);
+	                jsch.removeAllIdentity();
+	                jsch.addIdentity("C:\\Users\\50264\\.ssh\\id_rsa2");
+	                return jsch;
 	            }
+	            
 	        };
 //			Repository repository = repositoryBuilder.setGitDir(new File("D:\\Git\\narip\\demo\\.git"))
 //			        .readEnvironment() // scan environment GIT_* variables
@@ -57,6 +50,8 @@ public class demo4 {
 //						.setDirectory(new File("D:\\Git\\demo"))
 //						.call();
 				 CloneCommand cloneCommand = Git.cloneRepository();
+				 cloneCommand.setURI("ssh://root@39.97.255.250:/root/narip/demo");
+				 cloneCommand.setDirectory(new File("D:\\\\Git\\\\demo"));
 			        cloneCommand.setTransportConfigCallback(new TransportConfigCallback() {
 			            @Override
 			            public void configure(Transport transport) {
@@ -64,8 +59,6 @@ public class demo4 {
 			                sshTransport.setSshSessionFactory(sshSessionFactory);
 			            }
 			        });
-			        cloneCommand.setURI("root@39.97.255.250:/root/narip/demo");
-			        cloneCommand.setDirectory(new File("D:\\\\Git\\\\demo"));
 			        cloneCommand.call();
 			} catch (InvalidRemoteException e) {
 				// TODO Auto-generated catch block
