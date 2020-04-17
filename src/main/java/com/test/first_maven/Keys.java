@@ -121,6 +121,9 @@ public class Keys extends JFrame {
 						// TODO Auto-generated method stub
 						key_Create = window.GetKey();
 						path_Create = window.GetPath();
+						//远程的auth文件夹的尾部添加 public key
+						SSH ssh = new SSH();
+						ssh.exec("echo \'"+key_Create+"\' >> /root/.ssh/authorized_keys");
 						//执行更新table操作
 						model.addRow(new String[] {key_Create,path_Create});
 					}

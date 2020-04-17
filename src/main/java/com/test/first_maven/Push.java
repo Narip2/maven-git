@@ -14,19 +14,29 @@ import javax.swing.JButton;
 import javax.swing.event.PopupMenuListener;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.TransportConfigCallback;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.JschConfigSessionFactory;
+import org.eclipse.jgit.transport.OpenSshConfig;
 import org.eclipse.jgit.transport.SshSessionFactory;
+import org.eclipse.jgit.transport.SshTransport;
+import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.OpenSshConfig.Host;
+import org.eclipse.jgit.util.FS;
 
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 import javax.swing.event.PopupMenuEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Push extends JFrame {
 
@@ -94,18 +104,45 @@ public class Push extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				Git git = new Git(repo);
-				SshSessionFactory.setInstance( new JschConfigSessionFactory() {
-				    @Override
-				    protected void configure( Host host, Session session ) {
-				      session.setPassword( "a1b2c3d4E5" );
-				    }
-				} );
+				final SshSessionFactory sshSessionFactory = new JschConfigSessionFactory() {
+		            @Override
+		            protected void configure(OpenSshConfig.Host host, Session session) {
+		            	//第一次访问服务器不用输入yes
+		                session.setConfig("StrictHostKeyChecking", "no");
+		            }
+		            @Override
+		            protected JSch getJSch(final OpenSshConfig.Host hc, FS fs) throws JSchException {
+
+		                JSch jsch = super.getJSch(hc, fs);
+		                jsch.removeAllIdentity();
+		            	try {
+							Statement stmt = login.connect.createStatement();
+							ResultSet rs = stmt.executeQuery("select * from rsa where mac = \'"+login.Mac+"\'");
+							if(rs.next()) {
+								jsch.addIdentity(rs.getString("path"));
+							}else {
+								System.out.println("本机没有key上传");
+							}
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+		                return jsch;
+		            }
+		            
+		        };
 				try {
 					//先切换分支
 					git.checkout().setCreateBranch(false).setName(from_branch).call();
 					//将当前分支push上去
 					//其实push只能是push当前分支到同样的分支上去，不能Push到另外不同的分支上面去
-					git.push().setRemote("root@39.97.255.250:/root/"+login.username+"/"+repo_name).call();
+					git.push().setRemote("root@39.97.255.250:/root/"+login.username+"/"+repo_name).setTransportConfigCallback(new TransportConfigCallback() {
+				            @Override
+				            public void configure(Transport transport) {
+				                SshTransport sshTransport = (SshTransport) transport;
+				                sshTransport.setSshSessionFactory(sshSessionFactory);
+				            }
+				        }).call();
 				} catch (InvalidRemoteException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

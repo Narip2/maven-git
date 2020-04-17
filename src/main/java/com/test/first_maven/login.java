@@ -92,6 +92,7 @@ public class login extends JFrame {
 	public String passwd;
 	static login login_frame;
 	public static Connection connect;
+	public static String Mac = new Function().getLocatMac();
 	
 	
 	/**

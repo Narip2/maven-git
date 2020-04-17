@@ -28,7 +28,8 @@ public class demo4 {
 		 final SshSessionFactory sshSessionFactory = new JschConfigSessionFactory() {
 	            @Override
 	            protected void configure(OpenSshConfig.Host host, Session session) {
-//	                session.setConfig("StrictHostKeyChecking", "no");
+	            	//第一次访问服务器不用输入yes
+	                session.setConfig("StrictHostKeyChecking", "no");
 	            }
 	            @Override
 	            protected JSch getJSch(final OpenSshConfig.Host hc, FS fs) throws JSchException {
