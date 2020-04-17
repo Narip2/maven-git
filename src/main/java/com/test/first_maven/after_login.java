@@ -214,6 +214,16 @@ public class after_login extends JFrame {
 		contentPane.add(button_2);
 		
 		btnSshKey = new JButton("SSH Key管理");
+		btnSshKey.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//窗口跳转
+				Keys window = new Keys();
+				window.SetCloseWindow(window);
+				afterlogin_frame.dispose();
+				window.setVisible(true);
+			}
+		});
 		btnSshKey.setBounds(10, 88, 111, 23);
 		contentPane.add(btnSshKey);
 		

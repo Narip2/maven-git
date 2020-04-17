@@ -91,6 +91,7 @@ public class login extends JFrame {
 	public static String temp_pro_user;
 	public String passwd;
 	static login login_frame;
+	public static Connection connect;
 	
 	
 	/**
@@ -141,6 +142,13 @@ public class login extends JFrame {
 	 * Create the frame.
 	 */
 	public login() {
+		try {
+			connect = DriverManager.getConnection(  
+			          "jdbc:mysql://localhost:3306/work_together?serverTimezone=UTC","root","123456");
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -171,8 +179,7 @@ public class login extends JFrame {
 						username = textField.getText();
 						passwd = passwordField.getText();
 						try {
-							Connection connect = DriverManager.getConnection(  
-							          "jdbc:mysql://localhost:3306/work_together?serverTimezone=UTC","root","123456");
+							
 							Statement stmt = connect.createStatement();
 							if(username == ""||passwd == "")
 							{
