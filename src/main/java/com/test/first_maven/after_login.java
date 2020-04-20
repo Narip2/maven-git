@@ -45,6 +45,7 @@ import javax.swing.JSplitPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
 
 public class after_login extends JFrame {
 
@@ -60,6 +61,9 @@ public class after_login extends JFrame {
 	Connection connect;
 	private JButton button_4;
 	private JTable table_1;
+	private DefaultTableModel model;
+	private JScrollPane scrollPane;
+	private JScrollPane scrollPane_1;
 	
 	
 	/**
@@ -150,32 +154,27 @@ public class after_login extends JFrame {
 		});
 		button_1.setBounds(10, 22, 111, 23);
 		contentPane.add(button_1);
-
-//		Vector vector = new Vector();
-//		vector.add("ddd");
-//		 Vector vector1 = new Vector();
-//		vector1.add("ss");
-//		Vector vector2 = new Vector();
-//		vector2.add(vector);
-//		vector2.add(vector);
-//		table = new JTable(vector2,vector1);
-		table = new JTable(row,column_name);
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				int index = table.getSelectedRow();
-				project.project_user = ((Vector) row.elementAt(index)).lastElement().toString();
-				project.project_name = ((Vector) row.elementAt(index)).firstElement().toString();
-				project window = new project();
-				//设置项目名称和所属用户
-				afterlogin_frame.dispose();
-				//将window传到project里面，之后关闭的时候好关闭
-				window.SetCloseWindow(window);
-				window.setVisible(true);
-			}
-		});
-		table.setBounds(115, 186, 431, 338);
-		contentPane.add(table);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(115, 186, 431, 338);
+		contentPane.add(scrollPane);
+		
+				table = new JTable(row,column_name);
+				scrollPane.setViewportView(table);
+				table.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						int index = table.getSelectedRow();
+						project.project_user = ((Vector) row.elementAt(index)).lastElement().toString();
+						project.project_name = ((Vector) row.elementAt(index)).firstElement().toString();
+						project window = new project();
+						//设置项目名称和所属用户
+						afterlogin_frame.dispose();
+						//将window传到project里面，之后关闭的时候好关闭
+						window.SetCloseWindow(window);
+						window.setVisible(true);
+					}
+				});
 		
 		button_2 = new JButton("打开本地仓库");
 		final JFileChooser jfile = new JFileChooser("");
@@ -274,21 +273,39 @@ public class after_login extends JFrame {
 		button_3.setBounds(10, 124, 111, 23);
 		contentPane.add(button_3);
 		
-		table_1 = new JTable();
-		table_1.setBounds(688, 186, 431, 338);
-		contentPane.add(table_1);
+		
+		model = new DefaultTableModel();
+		//每次重复使用model
+		model.setRowCount(0);
+		model.setColumnIdentifiers(new Object[] {"Project","Username"});
+		
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(688, 186, 431, 338);
+		contentPane.add(scrollPane_1);
+		try {
+			Statement stmt = login.connect.createStatement();
+			ResultSet rs = stmt.executeQuery("select * from repo where username = \'"+login.username+"\'");
+			while(rs.next()) {
+				model.addRow(new String[] {rs.getString("repo_name"),rs.getString("username")});
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		table_1 = new JTable(model);
+		scrollPane_1.setViewportView(table_1);
+		table_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int rowindex = table_1.rowAtPoint(e.getPoint());
+				project window = new project();
+				project.project_name = (String) table_1.getValueAt(rowindex, 0);
+				project.project_user = (String) table_1.getValueAt(rowindex, 1);
+				window.SetCloseWindow(window);
+				afterlogin_frame.dispose();
+				window.setVisible(true);
+			}
+		});
 		
 	}
 }
-
-
-
-
-
-/*注释
- * 1.在table 点击之后注意将project中project_name变量名称设置一下成当前名称
- *  并且project_user也需要改变一下
- * 
- * 
- *
- */
