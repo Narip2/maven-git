@@ -8,6 +8,8 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -21,6 +23,7 @@ import com.jcraft.jsch.Session;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
@@ -32,7 +35,13 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Vector;
+
 import javax.swing.JProgressBar;
+import javax.swing.JTree;
+import javax.swing.JComboBox;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.event.PopupMenuEvent;
 
 public class project extends JFrame {
 
@@ -42,6 +51,11 @@ public class project extends JFrame {
 	public static String project_user;
 	private static project close_window;
 	private Connection connect;
+	private DefaultTreeModel tree_model;
+	private DefaultMutableTreeNode Node;
+	private Vector<String> combobranch;
+	private JComboBox comboBox;
+	private JTree tree;
 
 	
 	public void SetCloseWindow(project window) {
@@ -211,6 +225,37 @@ public class project extends JFrame {
 		});
 		btnNewButton_1.setBounds(10, 10, 93, 23);
 		contentPane.add(btnNewButton_1);
+		
+		//用jtree 展示项目结构(对应分支)
+		login.ssh.SetProName(project_name);
+		login.ssh.SetUserName(project_user);
+		Node = login.ssh.GetAllFiles(project_name, "master");
+		tree_model = new DefaultTreeModel(Node);
+		//设置默认的model 不然会显示jtree默认的内容 默认打开master的分支
+		tree = new JTree(tree_model);
+		tree.setBounds(157, 276, 517, 421);
+		contentPane.add(tree);
+		combobranch = login.ssh.GetBranch(project_user, project_name);
+		comboBox = new JComboBox(combobranch);
+		comboBox.addPopupMenuListener(new PopupMenuListener() {
+			public void popupMenuCanceled(PopupMenuEvent e) {
+			}
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				int index = comboBox.getSelectedIndex();
+				Node = login.ssh.GetAllFiles(project_name, combobranch.get(index));
+				tree_model = new DefaultTreeModel(Node);
+				tree.setModel(tree_model);
+			}
+			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+			}
+		});
+		comboBox.setBounds(237, 243, 85, 23);
+		contentPane.add(comboBox);
+		
+		JLabel lblNewLabel = new JLabel("Branches:");
+		lblNewLabel.setBounds(157, 247, 70, 15);
+		contentPane.add(lblNewLabel);
+		
 		if(username.equals(project_user)) {
 		//用于添加一些项目合作人可以不用通过pull request， 而可以直接上传代码之类的
 			JButton button_1 = new JButton("授权");
@@ -229,13 +274,3 @@ public class project extends JFrame {
 		}
 	}
 }
-
-
-
-
-
-/* 注意
- * 1.如果有Bug考虑一下project中是否每次进来都更新正确了project_name 和 project_user这两个变量
- *
- * 
- */

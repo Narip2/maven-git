@@ -7,6 +7,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -20,6 +22,16 @@ public class SSH{
     private static final String HOST="39.97.255.250";
     private static final int DEFAULT_SSH_PORT=22;
     private Vector<String> output;
+    private String username;
+    private String repo_name;
+    private static DefaultMutableTreeNode tempnode;
+    
+    public void SetUserName(String user) {
+    	username = user;
+    }
+    public void SetProName(String proname) {
+    	repo_name = proname;
+    }
 
     public Vector<String> GetOutput() {
     	return output;
@@ -72,6 +84,31 @@ public class SSH{
     		temp.set(i, temp.get(i).substring(2));
     	}
     	return temp;
+    }
+    
+    //返回文件
+    public DefaultMutableTreeNode GetAllFiles(String nodename,String branch) {
+    	DefaultMutableTreeNode parent = new DefaultMutableTreeNode(nodename);
+    	exec("cd /root/"+username+"/"+repo_name+" &&git cat-file -p "+branch+"^{tree}");
+    	Vector<String> temp = new Vector<String>();
+    	temp = (Vector<String>) output.clone();
+    	if(temp.isEmpty()) {
+    		//空文件夹
+    		DefaultMutableTreeNode son = new DefaultMutableTreeNode(nodename,false);//false表示没有子目录
+    		return son;
+    	}else {
+    		for(int i = 0; i < temp.size(); i++) {
+    			if(temp.get(i).split(" ")[1].equals("tree")) {
+    				//是目录，生成节点，并递归调用，添加里面的节点
+    				parent.add(GetAllFiles(temp.get(i).split("	")[1],temp.get(i).split(" ")[2].split("	")[0]));
+    			}else if(temp.get(i).split(" ")[1].equals("blob")){
+    				//是文件，直接生成节点，加到父节点
+    				tempnode = new DefaultMutableTreeNode(temp.get(i).split("	")[1]);//false表示没有子目录
+    				parent.add(tempnode);
+    			}
+    		}
+    	}
+    	return parent;
     }
 
     private static class MyUserInfo implements UserInfo{

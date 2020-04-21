@@ -93,6 +93,7 @@ public class login extends JFrame {
 	static login login_frame;
 	public static Connection connect;
 	public static String Mac = new Function().getLocatMac();
+	public static SSH ssh;
 	
 	
 	/**
@@ -143,6 +144,7 @@ public class login extends JFrame {
 	 * Create the frame.
 	 */
 	public login() {
+		ssh = new SSH();
 		try {
 			connect = DriverManager.getConnection(  
 			          "jdbc:mysql://localhost:3306/work_together?serverTimezone=UTC","root","123456");
