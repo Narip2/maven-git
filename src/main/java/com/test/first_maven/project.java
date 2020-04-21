@@ -208,11 +208,6 @@ public class project extends JFrame {
 		btnNewButton.setBounds(566, 69, 93, 23);
 		contentPane.add(btnNewButton);
 		
-		JProgressBar progressBar = new JProgressBar();
-		progressBar.setBounds(546, 127, 146, 14);
-		
-		contentPane.add(progressBar);
-		
 		JButton btnNewButton_1 = new JButton("返回");
 		btnNewButton_1.addMouseListener(new MouseAdapter() {
 			@Override
