@@ -3,6 +3,7 @@ package com.test.first_maven;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
@@ -47,7 +48,6 @@ public class Keys extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//控制软件大小，使得填充满整个屏幕
 				Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
-				
 				setBounds(0,0,
 						screensize.width,
 						screensize.height);

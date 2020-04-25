@@ -131,8 +131,8 @@ public class download_path extends JFrame {
 			        };
 			        CloneCommand cloneCommand = Git.cloneRepository();
 			        cloneCommand.setURI("root@39.97.255.250:/root/"+download_user+"/"+download_project);
-					 cloneCommand.setDirectory(new File(textField.getText()+"/"+download_project));
-				        cloneCommand.setTransportConfigCallback(new TransportConfigCallback() {
+					cloneCommand.setDirectory(new File(textField.getText()+"/"+download_project));
+				    cloneCommand.setTransportConfigCallback(new TransportConfigCallback() {
 				            @Override
 				            public void configure(Transport transport) {
 				                SshTransport sshTransport = (SshTransport) transport;

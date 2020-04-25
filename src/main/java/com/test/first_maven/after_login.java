@@ -2,6 +2,7 @@ package com.test.first_maven;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.awt.Toolkit;
 
@@ -67,22 +68,6 @@ public class after_login extends JFrame {
 	
 	
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					after_login frame = new after_login();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
 	 */
 	public after_login() {
@@ -110,10 +95,10 @@ public class after_login extends JFrame {
 		}
 		//控制软件大小，使得填充满整个屏幕
 		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
-		
 		setBounds(0,0,
 				screensize.width,
 				screensize.height);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //		setBounds(100, 50, 1050, 600);
 		contentPane = new JPanel();

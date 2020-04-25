@@ -310,6 +310,7 @@ public class Repo_manager extends JFrame {
 				Fetch window = new Fetch();
 				window.SetRepository(repo);
 				window.SetCloseWindow(window);
+				window.Init();
 				window.setVisible(true);
 			}
 		});

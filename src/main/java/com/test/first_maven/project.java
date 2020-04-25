@@ -42,6 +42,7 @@ import javax.swing.JTree;
 import javax.swing.JComboBox;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.event.PopupMenuEvent;
+import javax.swing.JScrollPane;
 
 public class project extends JFrame {
 
@@ -226,10 +227,13 @@ public class project extends JFrame {
 		login.ssh.SetUserName(project_user);
 		Node = login.ssh.GetAllFiles(project_name, "master");
 		tree_model = new DefaultTreeModel(Node);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(157, 276, 517, 421);
+		contentPane.add(scrollPane);
 		//设置默认的model 不然会显示jtree默认的内容 默认打开master的分支
 		tree = new JTree(tree_model);
-		tree.setBounds(157, 276, 517, 421);
-		contentPane.add(tree);
+		scrollPane.setViewportView(tree);
 		combobranch = login.ssh.GetBranch(project_user, project_name);
 		comboBox = new JComboBox(combobranch);
 		comboBox.addPopupMenuListener(new PopupMenuListener() {

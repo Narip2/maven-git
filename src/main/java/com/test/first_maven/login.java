@@ -55,6 +55,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 
 import java.awt.FlowLayout;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.GroupLayout;
@@ -241,12 +242,12 @@ public class login extends JFrame {
 				    	  {
 				    		  //界面跳转
 				    		  after_login window = new after_login();
+				    		  //设置全屏
+//				    		  window.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+//				    		  GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(window);
 				    		  after_login.afterlogin_frame = window;
 				    		  login_frame.dispose();
-//				    		  contentPane.setVisible(false);
 				    		  window.setVisible(true);
-//				    		  System.exit(0);
-				    		  
 				    	  }else {
 				    		  label_2.setText("密码错误!");
 				    	  }
