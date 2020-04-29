@@ -23,6 +23,7 @@ import java.sql.Statement;
 import java.util.Vector;
 
 import javax.swing.JTable;
+import javax.swing.JScrollPane;
 
 public class Message extends JFrame {
 	private JPanel contentPane;
@@ -32,6 +33,7 @@ public class Message extends JFrame {
 	private Statement stmt;
 	private Vector<String> msg = new Vector<String>();
 	private String login_user = login.username;
+	private JScrollPane scrollPane;
 	/**
 	 * Launch the application.
 	 */
@@ -139,10 +141,12 @@ public class Message extends JFrame {
 		btnNewButton.setBounds(10, 10, 93, 23);
 		contentPane.add(btnNewButton);
 		
-		list = new JList();
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 84, 836, 413);
+		contentPane.add(scrollPane);
 		
-		list.setBounds(10, 84, 836, 413);
-		contentPane.add(list);
+		list = new JList();
+		scrollPane.setViewportView(list);
 		//展示list
 		RefreshList(list);
 		list.addMouseListener(new MouseAdapter() {
