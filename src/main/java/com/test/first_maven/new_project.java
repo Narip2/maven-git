@@ -31,16 +31,6 @@ public class new_project extends JFrame {
 	 */
 	public static void main(String[] args) {
 		
-//		try {  
-//		      Class.forName("com.mysql.jdbc.Driver");     //加载MYSQL JDBC驱动程序     
-//		      //Class.forName("org.gjt.mm.mysql.Driver");  
-//		     System.out.println("Success loading Mysql Driver!");  
-//		    }  
-//		    catch (Exception e) {  
-//		      System.out.print("Error loading Mysql Driver!");  
-//		      e.printStackTrace();  
-//		    }
-		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -124,9 +114,6 @@ public class new_project extends JFrame {
 				window.SetCloseWindow(window);
 				new_project_frame.dispose();
 				window.setVisible(true);
-
-				
-
 					}
 		});
 		button.setBounds(127, 153, 93, 23);

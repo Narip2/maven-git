@@ -193,7 +193,7 @@ public class login extends JFrame {
 							{
 								if(username.matches("[a-zA-Z0-9_]+"))
 								{
-									ResultSet rs = stmt.executeQuery("select * from user where username = \'"+username+"\'");
+										ResultSet rs = stmt.executeQuery("select * from user where username = \'"+username+"\'");
 									if(rs.next())
 									{
 										label_2.setText("账号已存在，请直接登录!");
