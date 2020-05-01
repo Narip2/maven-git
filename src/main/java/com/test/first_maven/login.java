@@ -118,7 +118,7 @@ public class login extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 //界面美化
-				WebLookAndFeel.install ();
+//				WebLookAndFeel.install ();
 //		try {
 //            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 //            	System.out.println(info.getName());

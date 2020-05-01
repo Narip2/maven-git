@@ -29,6 +29,8 @@ import javax.swing.JFileChooser;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -41,8 +43,10 @@ import javax.swing.JProgressBar;
 import javax.swing.JTree;
 import javax.swing.JComboBox;
 import javax.swing.event.PopupMenuListener;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 public class project extends JFrame {
 
@@ -54,9 +58,13 @@ public class project extends JFrame {
 	private Connection connect;
 	private DefaultTreeModel tree_model;
 	private DefaultMutableTreeNode Node;
+	private DefaultTableModel model;
 	private Vector<String> combobranch;
 	private JComboBox comboBox;
 	private JTree tree;
+	private JTable table;
+	public static String comment_msg;
+	
 
 	
 	public void SetCloseWindow(project window) {
@@ -255,6 +263,81 @@ public class project extends JFrame {
 		lblNewLabel.setBounds(157, 247, 70, 15);
 		contentPane.add(lblNewLabel);
 		
+		
+		//显示table
+		model = new DefaultTableModel();
+		//每次重复使用model
+		model.setRowCount(0);
+		model.setColumnIdentifiers(new Object[] {"comment_id","comment","username"});
+		try {
+			Statement stmt = login.connect.createStatement();
+			ResultSet rs = stmt.executeQuery("select * from comment where repo_name = \'"+project_name+"\' and username = \'"+project_user+"\'");
+			while(rs.next()) {
+				model.addRow(new String[]{rs.getInt("comment_id")+"",rs.getString("comment"),rs.getString("username")});
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		table = new JTable(model);
+		table.setBounds(795, 276, 517, 421);
+		contentPane.add(table);
+		
+		JButton btnNewButton_2 = new JButton("添加评论");
+		btnNewButton_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Comment_add window = new Comment_add();
+				window.SetCloseWindow(window);
+				window.setVisible(true);
+				window.addWindowListener(new WindowListener() {
+					@Override
+					public void windowOpened(WindowEvent e) {
+						// TODO Auto-generated method stub
+					}
+					@Override
+					public void windowClosing(WindowEvent e) {
+						// TODO Auto-generated method stub
+					}
+					@Override
+					public void windowClosed(WindowEvent e) {
+						// TODO Auto-generated method stub
+							try {
+								Statement stmt = login.connect.createStatement();
+								ResultSet rs = stmt.executeQuery("select * from repo where username = \'"+project_user+"\' and repo_name = \'"+project_name+"\'");
+								if(rs.next()) {
+									int temp = rs.getInt("comment_id");
+									stmt.executeUpdate("update repo set comment_id = "+(temp+1)+" where username = \'"+project_user+"\' and repo_name = \'"+project_name+"\'");
+									stmt.executeUpdate("insert into comment values(\'"+project_name+"\',\'"+comment_msg+"\',"+(temp+1)+",\'"+project_user+"\',\'"+login.username+"\')");
+									model.addRow(new String[] {temp+1+"",comment_msg,login.username});
+								}
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+					}
+					@Override
+					public void windowIconified(WindowEvent e) {
+						// TODO Auto-generated method stub
+					}
+					@Override
+					public void windowDeiconified(WindowEvent e) {
+						// TODO Auto-generated method stub
+					}
+					@Override
+					public void windowActivated(WindowEvent e) {
+						// TODO Auto-generated method stub
+					}
+					@Override
+					public void windowDeactivated(WindowEvent e) {
+						// TODO Auto-generated method stub
+					}});
+
+			}
+		});
+		btnNewButton_2.setBounds(1221, 220, 93, 23);
+		contentPane.add(btnNewButton_2);
+		
 		if(username.equals(project_user)) {
 		//用于添加一些项目合作人可以不用通过pull request， 而可以直接上传代码之类的
 			JButton button_1 = new JButton("授权");
@@ -266,7 +349,7 @@ public class project extends JFrame {
 					window.SetProjectName(project_name);
 					window.SetProjectUser(project_user);
 					window.setVisible(true);
-				}
+					}
 			});
 			button_1.setBounds(1144, 80, 93, 23);
 			contentPane.add(button_1);

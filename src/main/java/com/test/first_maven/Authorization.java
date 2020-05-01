@@ -93,7 +93,7 @@ public class Authorization extends JFrame {
 								stmt.executeUpdate("update repo set auth = 2 where username = \'"+textField.getText()+"\' and repo_name = \'"+project_name+"\'");
 							}else {
 								//没有同名项目 准备更新数据库 将auth设置为2，插入repo中 表明实际没有fork，等待fork
-								stmt.executeUpdate("insert into repo values(\'"+textField.getText()+"\',\'"+project_name+"\',\'"+project_user+"\',2)");
+								stmt.executeUpdate("insert into repo values(\'"+textField.getText()+"\',\'"+project_name+"\',\'"+project_user+"\',2,0)");
 								//关闭授权窗口
 							}
 						}
