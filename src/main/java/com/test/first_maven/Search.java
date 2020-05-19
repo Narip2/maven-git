@@ -14,6 +14,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import Demo.Test;
+
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
@@ -32,6 +35,8 @@ public class Search extends JFrame {
 	public void SetCloseWindow(Search window) {
 		close_window = window;
 	}
+	
+	
 	/**
 	 * Create the frame.
 	 */

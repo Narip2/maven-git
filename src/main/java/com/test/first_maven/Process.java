@@ -14,6 +14,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+
+import Demo.Test;
+
 import javax.swing.JTable;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;

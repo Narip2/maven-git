@@ -22,6 +22,8 @@ import org.eclipse.jgit.api.errors.NotMergedException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 
+import Demo.Test;
+
 import javax.swing.event.PopupMenuEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -57,6 +59,21 @@ public class Branch_Delete extends JFrame {
 				SSH ssh = new SSH();
 				branch = ssh.GetBranch(login.username, repo_name);
 				comboBox.setModel(new DefaultComboBoxModel(branch));
+	}
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Branch_Delete frame = new Branch_Delete();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 	
 

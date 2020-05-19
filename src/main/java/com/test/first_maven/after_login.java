@@ -40,6 +40,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JLabel;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
+
+import Demo.Test;
+import Demo.demo6;
+
 import javax.swing.JDesktopPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JSplitPane;
@@ -66,7 +70,21 @@ public class after_login extends JFrame {
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane_1;
 	
-	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					after_login frame = new after_login();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 	/**
 	 * Create the frame.
 	 */

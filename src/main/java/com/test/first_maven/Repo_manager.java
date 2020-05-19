@@ -24,6 +24,9 @@ import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+
+import Demo.Test;
+
 import javax.swing.JEditorPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -118,6 +121,23 @@ public class Repo_manager extends JFrame {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Repo_manager frame = new Repo_manager();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
 	/**
 	 * Create the frame.
 	 */

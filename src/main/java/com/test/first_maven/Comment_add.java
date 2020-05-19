@@ -6,6 +6,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import Demo.Test;
+
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
@@ -25,6 +28,21 @@ public class Comment_add extends JFrame {
 		close_window = window;
 	}
 
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Comment_add frame = new Comment_add();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 	/**
 	 * Create the frame.
 	 */

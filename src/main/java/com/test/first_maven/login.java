@@ -114,7 +114,6 @@ public class login extends JFrame {
 		    }
 		
 		
-		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 //界面美化

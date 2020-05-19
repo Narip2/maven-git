@@ -21,6 +21,8 @@ import org.eclipse.jgit.transport.OpenSshConfig.Host;
 
 import com.jcraft.jsch.Session;
 
+import Demo.Test;
+
 import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
@@ -40,10 +42,8 @@ public class Log extends JFrame {
 	public void SetCloseWindow(Log window) {
 		close_window = window;
 	}
-
-	/**
-	 * Launch the application.
-	 */
+	
+	
 	/**
 	 * Create the frame.
 	 */

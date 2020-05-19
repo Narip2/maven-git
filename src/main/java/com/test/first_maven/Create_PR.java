@@ -22,6 +22,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Vector;
 import javax.swing.event.PopupMenuListener;
+
+import Demo.Test;
+
 import javax.swing.event.PopupMenuEvent;
 
 public class Create_PR extends JFrame {
@@ -88,6 +91,22 @@ public class Create_PR extends JFrame {
 			show += "\n";
 		}
 		textArea.setText(show);
+	}
+	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Create_PR frame = new Create_PR();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 	
 	/**

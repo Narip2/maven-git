@@ -21,6 +21,8 @@ import org.eclipse.jgit.transport.OpenSshConfig.Host;
 
 import com.jcraft.jsch.Session;
 
+import Demo.Test;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.DefaultComboBoxModel;
@@ -94,6 +96,21 @@ public class project extends JFrame {
 //		return project_name;
 //	}
 	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					project frame = new project();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 	
 	/**
 	 * Create the frame.
