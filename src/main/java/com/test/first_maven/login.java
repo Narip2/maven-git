@@ -97,6 +97,10 @@ public class login extends JFrame {
 	public static SSH ssh;
 	
 	
+	public void SetCloseWindow(login window) {
+		login_frame = window;
+	}
+	
 	/**
 	 * Launch the application.
 	 */

@@ -133,11 +133,26 @@ public class Log extends JFrame {
 				}
 			}
 		});
+		
 		btnNewButton.setBounds(138, 674, 126, 23);
 		contentPane.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("浏览版本");
 		btnNewButton_1.setBounds(665, 674, 93, 23);
 		contentPane.add(btnNewButton_1);
+		
+		JButton btnNewButton_2 = new JButton("返回");
+		btnNewButton_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Repo_manager window = new Repo_manager();
+				window.SetCloseWindow(window);
+				window.SetRepository(repo);
+				close_window.dispose();
+				window.setVisible(true);
+			}
+		});
+		btnNewButton_2.setBounds(51, 49, 93, 23);
+		contentPane.add(btnNewButton_2);
 	}
 }

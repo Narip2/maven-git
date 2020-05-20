@@ -273,7 +273,7 @@ public class after_login extends JFrame {
 				window.setVisible(true);
 			}
 		});
-		button_3.setBounds(10, 124, 111, 23);
+		button_3.setBounds(10, 153, 111, 23);
 		contentPane.add(button_3);
 		
 		
@@ -297,6 +297,19 @@ public class after_login extends JFrame {
 		}
 		table_1 = new JTable(model);
 		scrollPane_1.setViewportView(table_1);
+		
+		JButton btnNewButton = new JButton("退出");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				login window = new login();
+				window.SetCloseWindow(window);
+				afterlogin_frame.dispose();
+				window.setVisible(true);
+			}
+		});
+		btnNewButton.setBounds(10, 120, 111, 23);
+		contentPane.add(btnNewButton);
 		table_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {

@@ -101,7 +101,7 @@ public class new_project extends JFrame {
 				try {
 					stmt = connect.createStatement();
 					//插入数据库
-					stmt.executeUpdate("insert into repo (username,repo_name,auth) values(\'"+username+"\',\'"+project_name+"\',1,0)");
+					stmt.executeUpdate("insert into repo (username,repo_name,auth,comment_id) values(\'"+username+"\',\'"+project_name+"\',1,0)");
 					
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block

@@ -157,7 +157,7 @@ public class project extends JFrame {
 						SSH ssh = new SSH();
 						ssh.exec("git clone --bare root@39.97.255.250:/root/"+project_user+"/"+project_name+" /root/"+username+"/"+project_name);
 						//更新table repo
-						stmt.executeUpdate("insert into repo values (\'"+username+"\',\'"+project_name+"\',\'"+project_user+"\',0)");
+						stmt.executeUpdate("insert into repo values (\'"+username+"\',\'"+project_name+"\',\'"+project_user+"\',0,0)");
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -199,9 +199,9 @@ public class project extends JFrame {
 					e1.printStackTrace();
 				}
 				
-				
 			}
 		});
+		
 		btnPullRequest.setBounds(157, 69, 126, 23);
 		contentPane.add(btnPullRequest);
 		
@@ -217,6 +217,7 @@ public class project extends JFrame {
 				window.setVisible(true);
 			}
 		});
+		
 		button.setBounds(438, 69, 93, 23);
 		contentPane.add(button);
 		
@@ -231,6 +232,7 @@ public class project extends JFrame {
 				window.setVisible(true);
 			}
 		});
+		
 		btnNewButton.setBounds(566, 69, 93, 23);
 		contentPane.add(btnNewButton);
 		
@@ -244,6 +246,7 @@ public class project extends JFrame {
 	    		  window.setVisible(true);
 			}
 		});
+		
 		btnNewButton_1.setBounds(10, 10, 93, 23);
 		contentPane.add(btnNewButton_1);
 		
@@ -256,9 +259,11 @@ public class project extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(157, 276, 517, 421);
 		contentPane.add(scrollPane);
+		
 		//设置默认的model 不然会显示jtree默认的内容 默认打开master的分支
 		tree = new JTree(tree_model);
 		scrollPane.setViewportView(tree);
+		
 		combobranch = login.ssh.GetBranch(project_user, project_name);
 		comboBox = new JComboBox(combobranch);
 		comboBox.addPopupMenuListener(new PopupMenuListener() {
@@ -273,6 +278,7 @@ public class project extends JFrame {
 			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
 			}
 		});
+		
 		comboBox.setBounds(237, 243, 85, 23);
 		contentPane.add(comboBox);
 		
@@ -352,6 +358,7 @@ public class project extends JFrame {
 
 			}
 		});
+		
 		btnNewButton_2.setBounds(1221, 220, 93, 23);
 		contentPane.add(btnNewButton_2);
 		
@@ -368,6 +375,7 @@ public class project extends JFrame {
 					window.setVisible(true);
 					}
 			});
+			
 			button_1.setBounds(1144, 80, 93, 23);
 			contentPane.add(button_1);
 		}
