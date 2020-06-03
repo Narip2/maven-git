@@ -67,8 +67,6 @@ public class project extends JFrame {
 	private JTable table;
 	public static String comment_msg;
 	
-
-	
 	public void SetCloseWindow(project window) {
 		close_window = window;
 	}
@@ -198,7 +196,6 @@ public class project extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
 			}
 		});
 		
@@ -285,7 +282,6 @@ public class project extends JFrame {
 		JLabel lblNewLabel = new JLabel("Branches:");
 		lblNewLabel.setBounds(157, 247, 70, 15);
 		contentPane.add(lblNewLabel);
-		
 		
 		//显示table
 		model = new DefaultTableModel();
